@@ -1,0 +1,64 @@
+﻿@* @using ASP_Project.Areas.Identity.Data.Models; *@
+@* @using ASP_Project.Areas.Identity.Data.DbContexts *@
+@* @model IEnumerable<ProductVariation> *@
+@* @inject UserContext _dbContext *@
+@* @{ *@
+@*     ViewData["Title"] = "Products"; *@
+@*      *@
+@*     var parentCategories = _dbContext.ParentCategories; *@
+@* } *@
+@* *@
+@* <!DOCTYPE html> *@
+@* *@
+@* <html> *@
+@* <head> *@
+@*     <title>List</title> *@
+@* </head> *@
+@* <style> *@
+@*      *@
+@*     .card-container { *@
+@*         display: flex; *@
+@*         flex-wrap: wrap; *@
+@*     } *@
+@*      *@
+@*     .card { *@
+@*         width: 200px; *@
+@*         border: 1px solid #ccc; *@
+@*         border-radius: 5px; *@
+@*         margin: 5px; *@
+@*         padding: 10px; *@
+@*     } *@
+@*      *@
+@*     .card img { *@
+@*         max-width: 100%; *@
+@*         height: auto; *@
+@*     } *@
+@* </style> *@
+@* <body> *@
+@* <div> *@
+@*     <select id="parentCategorySelect"> *@
+@*         <option value="">Select Parent Category</option> *@
+@*         @foreach (var parentCategory in parentCategories) *@
+@*         { *@
+@*             <option value="@parentCategory.Id">@parentCategory.Name</option> *@
+@*         } *@
+@*     </select> *@
+@*      *@
+@*     <select id="categorySelect"> *@
+@*         <option value="">Select Category</option> *@
+@*     </select> *@
+@*      *@
+@*     <div id="productsContainer" class="card-container"> *@
+@*         @foreach (var productVariation in Model) *@
+@*         { *@
+@*             <div class="card"> *@
+@*                 <img src="data:image/jpeg;base64,@Convert.ToBase64String(productVariation.ProductImages.First().ImageData!)" alt="Product Image"/> *@
+@*                 <h3>@productVariation.Name</h3> *@
+@*                 <p>Price: @productVariation.Price</p> *@
+@*             </div> *@
+@*         } *@
+@*     </div> *@
+@* </div> *@
+@* </body> *@
+@* </html> *@
+@* *@

@@ -1,0 +1,120 @@
+﻿@using ASP_Project.Areas.Identity.Data.DbContexts;
+@using ASP_Project.Areas.Identity.Data.Models
+@inject UserContext _context
+
+@model ProductVariation
+
+@{
+    Layout = "_AdminsLayout";
+    var products = _context.Products.ToList();
+    var productImages = ViewBag.ProductImages as List<ProductImage>;
+}
+
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="stylesheet" href="~/css/ProductVariationStyles/Edit.css"/>
+    <title>Product Variation Edit</title>
+</head>
+
+
+<form method="post" asp-action="Edit" enctype="multipart/form-data">
+    <div class="main-container">
+        <div class="column first">
+            <div>
+                <h2 class="text-primary">Edit Product</h2>
+                <hr/>
+            </div>
+            <div class="inputs-container">
+                <div class="mb-3">
+                    <label asp-for="Price"></label>
+                    <input asp-for="Price" class="form-control"/>
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Quantity"></label>
+                    <input asp-for="Quantity" class="form-control"/>
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Discount"></label>
+                    <input asp-for="Discount" class="form-control"/>
+                    <span asp-validation-for="Discount" class="text-danger"></span>
+                </div>
+                <div class="input-buttons-container">
+                    <a asp-controller="ProductVariation" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                        Back to List
+                    </a>
+                    <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="column second">
+            @*<div class="images-container">
+				@foreach (var productImage in productImages)
+				{
+					if (productImage != null)
+					{
+						<div class="image-container" onclick="toggleImageSelection(this)">
+							<img class="image" alt="Product Image" src="data:image/jpeg;base64,@Convert.ToBase64String(productImage.ImageData)">
+						</div>
+					}
+				}
+			</div>*@
+
+            <div class="images-container">
+            	@if (productImages != null)
+            	{
+            		@foreach (var productImage in productImages)
+            		{
+            			if (productImage != null)
+            			{
+            				<div class="image-container">
+            					<img class="image" onclick="toggleImageSelection(this)" alt="Product Image" src="data:image/jpeg;base64,@Convert.ToBase64String(productImage.ImageData)"
+            					     data-image-id="@productImage.Id">
+            				</div>
+            			}
+            		}
+            	}
+            </div>
+
+            @* <div class="images-container"> *@
+            @*     @if (productImages != null) *@
+            @*     { *@
+            @*         foreach (var productImage in productImages) *@
+            @*         { *@
+            @*             if (productImage != null && productImage.ImageData != null && productImage.ImageData.Length > 0) *@
+            @*             { *@
+            @*                 <div class="image-container"> *@
+            @*                     <input type="hidden" name="productImages[@i].Id" value="@productImage.Id" /> *@
+            @*                     @{ *@
+            @*                         var base64Image = Convert.ToBase64String(productImage.ImageData); *@
+            @*                     } *@
+            @*                     <img class="image" onclick="toggleImageSelection(this)" alt="Product Image" src="data:image/jpeg;base64,@base64Image" data-image-id="@productImage.Id"> *@
+            @*                 </div> *@
+            @*             } *@
+            @*         } *@
+            @*     } *@
+            @* </div> *@
+
+            <div class="image-buttons-container">
+
+                <button class="add-image-button" id="addImagesButton" data-product-variation-id="@Model.Id">
+                    <img class="add-image-icon" src="/icons/add-photo.svg" alt="Add Icon">
+                </button>
+
+                <input type="file" id="fileInput" name="files" multiple style="display: none;">
+
+                <button class="delete-image-button" id="deleteImagesButton">
+                    <img class="delete-image-icon" src="/icons/delete-img.svg" alt="Delete Icon">
+                </button>
+
+                <input type="hidden" id="selectedImageIds" name="selectedImageIds" value=""/>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<script src="~/js/ProductVariationScripts/edit.js"></script>
