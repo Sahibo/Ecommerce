@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 
 namespace EcommerceAPI;
-
+public enum Gender : int
+{
+    Man = 1,
+    Woman = 2,
+    Unisex = 3
+}
 public partial class Product
 {
     public int Id { get; set; }
