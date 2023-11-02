@@ -1,18 +1,32 @@
 import { Routes, Route, Link, useNavigate, Navigate } from "react-router-dom";
 import { Products } from '../Products';
 import React, { useEffect, useState } from 'react';
+import ProductService from '../../Services/product-service';
 
 export function Home() {
   const navigate = useNavigate()
+  //const productService = new ProductService();
 
-  const handleGenderClick = (selectedGender, e) => {
-    e.preventDefault();
-    navigate(`/Product/Gender/${selectedGender}`)
+  const getByGender = async (gender) => {
+    try {
+        const productService = new ProductService();
+        const products = await productService.getByGender(gender);
+        // Handle the fetched products, for example, update state with the new products
+        // setProducts(products);
+    } catch (error) {
+        console.error('Error fetching products by gender:', error);
+    }
   };
+
+  const handleGenderClick = (gender, e) => {
+    e.preventDefault();
+    getByGender(gender);
+  };
+
 
   const handleParentCategoryClick = (selectedParentCategory, e) => {
     e.preventDefault();
-    console.log(selectedParentCategory);
+    
     navigate(`/ParentCategory/${selectedParentCategory}`)
   };
 
