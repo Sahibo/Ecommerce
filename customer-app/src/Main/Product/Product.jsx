@@ -1,35 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import ProductService from '../../Services/product-service';
-
+import { getById } from '../../store/reducer';
+import { useDispatch, useSelector } from 'react-redux';
 export function Product() {
+
   const { id } = useParams();
+  let dispatch = useDispatch()
   const [product, setProduct] = useState(null);
   
   useEffect(() => {
-    const productService = new ProductService();
-
     const fetchData = async () => {
-        try {
-            const product = await productService.getById(id);
-            setProduct(product);
-        } catch (error) {
-            console.error('Error fetching products:', error);
+      try {
+        const resultAction = await dispatch(getById(id));
+ 
+        if (getById.fulfilled.match(resultAction)) {
+          const productData = resultAction.payload;
+          setProduct(productData);
+        } else if (getById.rejected.match(resultAction)) {
+          console.error('Error while recieving data', resultAction.error.message);
         }
+      } catch (error) {
+        console.error('Error when fetching getById:', error);
+      }
     };
-
+ 
     fetchData();
-}, [id]);
-
+  }, [id, dispatch]);
+ 
+  console.log(product)
   return (
     <div className="main-container">
-      <h1>Product</h1>
-
+      <div>
+        <h3>{product.name}</h3>
+        <span>{product.variation.name}</span>
+      </div>
+ 
       {product && (
         <div>
-          <div>{product.name}</div>
-          <div>{product.make}</div>
-          <div>{product.gender}</div>
+          <ul>
+            <li>{product.name}</li>
+            <li>{product.make}</li>
+            <li>{product.description}</li>
+            <li>{product.gender}</li>
+            <li>{product.fabric}</li>
+          </ul>
         </div>
       )}
     </div>

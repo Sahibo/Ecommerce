@@ -5,12 +5,12 @@ export const getAll = createAsyncThunk(
     async (_,{ getState }) => {
       const state = getState();
       const url = `${state.products.base}`;
-      console.log(url);
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Failed to fetch products by gender');
       }
       const data = await response.json();
+      console.log(data);
       return data;
     }
   );
@@ -30,7 +30,22 @@ export const getByGender = createAsyncThunk(
       return data;
     }
   );
-
+  
+  export const getById = createAsyncThunk(
+    'Product/:id',
+    async (id, { getState }) => {
+      const state = getState();
+      const url = `${state.products.base}/${id}`;
+      console.log(url);
+   
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Failed to fetch product by id');
+      }
+      const data = await response.json();
+      return data;
+    }
+  );
 
 const productsSlice = createSlice({
   name: "products",
