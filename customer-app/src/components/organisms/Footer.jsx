@@ -1,7 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 
 
-export function Footer() {
+export default function Footer() {
   return (
     <footer className="footer-container">
       

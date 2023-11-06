@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getById } from '../../store/reducer';
 import { useDispatch, useSelector } from 'react-redux';
-export function Product() {
+
+export default function ProductPage() {
 
   const { id } = useParams();
   let dispatch = useDispatch()

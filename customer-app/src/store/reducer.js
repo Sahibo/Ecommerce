@@ -24,9 +24,14 @@ export const getByGender = createAsyncThunk(
 
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error('Failed to fetch products by gender');
+        if (response.status === 404) {
+          return null;
+        } else {
+          throw new Error('Failed to fetch products by gender');
+        }
       }
       const data = await response.json();
+      console.log(data);
       return data;
     }
   );
