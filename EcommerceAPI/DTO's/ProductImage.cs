@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace EcommerceAPI;
 
@@ -12,6 +13,6 @@ public partial class ProductImage
     public string? Url { get; set; }
 
     public int ProductVariationId { get; set; }
-
+    [JsonIgnore]
     public virtual ProductVariation ProductVariation { get; set; } = null!;
 }

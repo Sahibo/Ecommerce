@@ -1,10 +1,6 @@
 ﻿using EcommerceAPI.DbContexts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EcommerceAPI.Controllers
 {
@@ -43,9 +39,5 @@ namespace EcommerceAPI.Controllers
             return Ok(category);
         }
 
-        
-
-
-        
     }
 }

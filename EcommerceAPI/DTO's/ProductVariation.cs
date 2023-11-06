@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace EcommerceAPI;
 
@@ -22,7 +23,7 @@ public partial class ProductVariation
     public bool? IsDeleted { get; set; }
 
     public int ProductId { get; set; }
-
+    [JsonIgnore]
     public virtual Product Product { get; set; } = null!;
 
     public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
