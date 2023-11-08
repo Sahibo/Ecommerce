@@ -1,0 +1,56 @@
+/* Common css */
+
+.container {
+    display: flex;
+    justify-content: center;
+    vertical-align: middle;
+
+    width: 10%;
+    
+}
+
+.list {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Account Navigation Header */
+
+.icon {
+    display: flex;
+    justify-content: center;
+    vertical-align: middle;
+
+    height: 100%;
+    width: 30px;
+}
+
+/* Genders Header */
+
+.gender-item a {
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+}
+  
+.gender-item a::after {
+    content: '';
+    position: relative;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+    display: block;
+}
+  
+.gender-item a:hover::after, a:active::after, a:focus::after {
+    border-color: #000;
+}

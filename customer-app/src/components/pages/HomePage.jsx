@@ -1,3 +1,4 @@
+import '../../global.css';
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../organisms/Header"
 
