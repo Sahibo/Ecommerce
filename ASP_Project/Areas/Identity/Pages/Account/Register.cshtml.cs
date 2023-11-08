@@ -72,23 +72,23 @@ namespace ASP_Project.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
-
-            [Required]
-            [RegularExpression(@"[a-zA-Z]+")]
-            [Display(Name = "First name")]
-            public string FirstName { get; set; }
-            [Required]
-            [RegularExpression(@"[a-zA-Z]+")]
-            [Display(Name = "Last name")]
-
-            public string LastName { get; set; }
+            //
+            // [Required]
+            // [RegularExpression(@"[a-zA-Z]+")]
+            // [Display(Name = "First name")]
+            // public string FirstName { get; set; }
+            // [Required]
+            // [RegularExpression(@"[a-zA-Z]+")]
+            // [Display(Name = "Last name")]
+            //
+            // public string LastName { get; set; }
 
             //public string Address { get; set; }
 
-            [Required]
-            [RegularExpression(@"^\+994\d{9}$")]
-            [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
+            // [Required]
+            // [RegularExpression(@"^\+994\d{9}$")]
+            // [Display(Name = "Phone number")]
+            // public string PhoneNumber { get; set; }
         }
 
 
@@ -173,9 +173,9 @@ namespace ASP_Project.Areas.Identity.Pages.Account
             {
                 var user = new ApplicationUser()
                 {
-                    FirstName = Input.FirstName,
-                    LastName = Input.LastName,
-                    PhoneNumber = Input.PhoneNumber,
+                    // FirstName = Input.FirstName,
+                    // LastName = Input.LastName,
+                    // PhoneNumber = Input.PhoneNumber,
                     Email = Input.Email
                 };
                 return user;

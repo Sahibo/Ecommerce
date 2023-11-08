@@ -6,6 +6,6 @@
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
 
-		public List<Category>? Categories { get; set; }
+		public ICollection<Category>? Categories { get; set; }
     }
 }

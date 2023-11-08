@@ -21,7 +21,7 @@ namespace ASP_Project.Areas.Identity.Data.Models
         public string Description { get; set; }
         public bool IsDeleted { get; set; }
 
-		public List<ProductVariation> ProductVariations { get; set; }
+		public ICollection<ProductVariation> ProductVariations { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
     

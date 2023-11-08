@@ -30,7 +30,7 @@ namespace ASP_Project.Areas.Identity.Data.Models
         public int ShoppingCartId { get; set; }
         public ShoppingCart ShoppingCart { get; set; }
     
-        public List<OrderProduct> OrderProducts { get; set; }
+        public ICollection<OrderProduct> OrderProducts { get; set; }
 
     }
 }

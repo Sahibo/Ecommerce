@@ -9,6 +9,6 @@
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
     
-        public List<ShoppingCartItem>? ShoppingCartItems { get; set; }
+        public ICollection<ShoppingCartItem>? ShoppingCartItems { get; set; }
     }
 }

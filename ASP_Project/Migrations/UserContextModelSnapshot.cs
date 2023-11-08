@@ -94,14 +94,6 @@ namespace ASP_Project.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -181,6 +173,24 @@ namespace ASP_Project.Migrations
                     b.HasIndex("ParentCategoryId");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("ASP_Project.Areas.Identity.Data.Models.Favorite", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProductVariationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "ProductVariationId");
+
+                    b.HasIndex("ProductVariationId");
+
+                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("ASP_Project.Areas.Identity.Data.Models.OnlinePayment", b =>
@@ -362,13 +372,13 @@ namespace ASP_Project.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Fabric")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Gender")
                         .ValueGeneratedOnAdd()
@@ -660,6 +670,25 @@ namespace ASP_Project.Migrations
                     b.Navigation("ParentCategory");
                 });
 
+            modelBuilder.Entity("ASP_Project.Areas.Identity.Data.Models.Favorite", b =>
+                {
+                    b.HasOne("ASP_Project.Areas.Identity.Data.Models.ProductVariation", "ProductVariation")
+                        .WithMany("Favorites")
+                        .HasForeignKey("ProductVariationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ASP_Project.Areas.Identity.Data.Models.ApplicationUser", "User")
+                        .WithMany("Favorites")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductVariation");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ASP_Project.Areas.Identity.Data.Models.OnlinePayment", b =>
                 {
                     b.HasOne("ASP_Project.Areas.Identity.Data.Models.ApplicationUser", "User")
@@ -838,6 +867,8 @@ namespace ASP_Project.Migrations
                 {
                     b.Navigation("Addresses");
 
+                    b.Navigation("Favorites");
+
                     b.Navigation("OnlinePayments");
 
                     b.Navigation("Orders");
@@ -873,6 +904,8 @@ namespace ASP_Project.Migrations
 
             modelBuilder.Entity("ASP_Project.Areas.Identity.Data.Models.ProductVariation", b =>
                 {
+                    b.Navigation("Favorites");
+
                     b.Navigation("ProductImages");
 
                     b.Navigation("ShoppingCartItem")

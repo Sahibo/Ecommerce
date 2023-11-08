@@ -1,8 +1,6 @@
 ﻿using ASP_Project.Areas.Identity.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace ASP_Project.Areas.Identity.Data.DbContexts;
 
@@ -12,7 +10,7 @@ public class UserContext : IdentityDbContext<ApplicationUser>
     public DbSet<Product> Products { get; set; }
     public DbSet<ProductVariation> ProductVariations { get; set; }
     public DbSet<Address> Addresses { get; set; }
-    //public DbSet<Favorite> Favorites { get; set; }
+    public DbSet<Favorite> Favorites { get; set; }
     public DbSet<OnlinePayment> OnlinePayments { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
@@ -61,8 +59,8 @@ public class UserContext : IdentityDbContext<ApplicationUser>
             entity.Property(p => p.Name).IsRequired().HasMaxLength(50);
             entity.Property(p => p.Make).IsRequired().HasMaxLength(25);
             entity.Property(p => p.Gender).IsRequired().HasDefaultValue(Gender.Unisex);
-            entity.Property(p => p.Fabric).HasMaxLength(50);
-            entity.Property(p => p.Description).HasMaxLength(100);
+            entity.Property(p => p.Fabric).HasMaxLength(100);
+            entity.Property(p => p.Description).HasMaxLength(200);
             entity.Property(p => p.IsDeleted).HasDefaultValue(false);
 
 			entity.HasOne(p => p.Category)
@@ -106,8 +104,8 @@ public class UserContext : IdentityDbContext<ApplicationUser>
         builder.Entity<ApplicationUser>(entity =>
         {
             entity.HasKey(u => u.Id);
-            entity.Property(u => u.FirstName).IsRequired();
-            entity.Property(u => u.LastName).IsRequired();
+            // entity.Property(u => u.FirstName).IsRequired();
+            // entity.Property(u => u.LastName).IsRequired();
             entity.Property(u => u.PhoneNumber);
             
             entity.HasIndex(u => u.PhoneNumber).IsUnique();
@@ -150,18 +148,20 @@ public class UserContext : IdentityDbContext<ApplicationUser>
                 .OnDelete(DeleteBehavior.Cascade);
         });
         
-        // builder.Entity<Favorite>(entity =>
-        // {
-        //     entity.HasKey(f => f.UserId);
-        //
-        //     // entity.HasOne(f => f.User)
-        //     //     .WithMany()
-        //     //     .HasForeignKey(f => f.UserId);
-        //
-        //     entity.HasMany(f => f.Products)
-        //         .WithOne()    //test
-        //         .HasForeignKey(f => f.Id);
-        // });
+        builder.Entity<Favorite>(entity =>
+        {
+            entity.HasKey(f => new { f.UserId, f.ProductVariationId });
+
+            entity.HasOne(f => f.User)
+                .WithMany(u => u.Favorites)
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasOne(f => f.ProductVariation)
+                .WithMany(pv => pv.Favorites)
+                .HasForeignKey(f => f.ProductVariationId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
 
         builder.Entity<ShoppingCart>(entity =>
         {

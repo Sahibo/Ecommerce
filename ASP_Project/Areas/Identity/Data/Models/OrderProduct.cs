@@ -12,6 +12,6 @@
         public int ShoppingCartItemId { get; set; }
         public ShoppingCartItem ShoppingCartItem { get; set; }
     
-        public List<OrderStateHistory> StateHistories { get; set; }
+        public ICollection<OrderStateHistory> StateHistories { get; set; }
     }
 }
