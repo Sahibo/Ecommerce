@@ -27,6 +27,8 @@ public partial class ProductVariation
     public virtual Product Product { get; set; } = null!;
 
     public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
+    public virtual ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
+
 
     public virtual ShoppingCartItem? ShoppingCartItem { get; set; }
 }

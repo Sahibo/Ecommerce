@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace EcommerceAPI;
 
-public partial class AspNetRoleClaim
+public partial class AspNetRoleClaim : IdentityRoleClaim<string>
 {
-    public int Id { get; set; }
-
-    public string RoleId { get; set; } = null!;
 
     public string? ClaimType { get; set; }
 

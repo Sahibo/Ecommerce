@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace EcommerceAPI;
 public enum Gender : int
 {
-    Man = 1,
-    Woman = 2,
-    Unisex = 3
+    Man = 0,
+    Woman = 1,
+    Unisex = 2
 }
 public partial class Product
 {

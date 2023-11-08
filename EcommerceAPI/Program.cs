@@ -1,5 +1,8 @@
+using EcommerceAPI;
 using EcommerceAPI.DbContexts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +12,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 var connectionString = builder.Configuration.GetConnectionString("ECommerce") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
 builder.Services.AddDbContext<EcommerceContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddIdentity<AspNetUser, AspNetRole>()
+    .AddEntityFrameworkStores<EcommerceContext>().AddDefaultTokenProviders();
 
 var app = builder.Build();
 

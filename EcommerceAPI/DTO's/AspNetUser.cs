@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace EcommerceAPI;
 
-public partial class AspNetUser
+public partial class AspNetUser : IdentityUser
 {
-    public string Id { get; set; } = null!;
-
-    public string FirstName { get; set; } = null!;
-
-    public string LastName { get; set; } = null!;
-
-    public string? PhoneNumber { get; set; }
-
+    
     public string? UserName { get; set; }
 
     public string? NormalizedUserName { get; set; }
-
+    
     public string? Email { get; set; }
 
     public string? NormalizedEmail { get; set; }
@@ -40,6 +34,8 @@ public partial class AspNetUser
     public int AccessFailedCount { get; set; }
 
     public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
+    public virtual ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
+
 
     public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; } = new List<AspNetUserClaim>();
 

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace EcommerceAPI;
 
-public partial class AspNetRole
+public partial class AspNetRole : IdentityRole
 {
-    public string Id { get; set; } = null!;
-
     public string? Name { get; set; }
 
     public string? NormalizedName { get; set; }
