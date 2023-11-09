@@ -1,9 +1,19 @@
 .navbar-container {
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .header-container {
     display: flex;
     justify-content: space-between;
 }
+
+.submenu-container {
+    width: 100%;
+    display: flex;
+    position: absolute;
+    z-index: 99;
+    
+}
+

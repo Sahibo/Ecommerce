@@ -1,4 +1,6 @@
 import '../../global.css';
+import './styles/pages.css';
+
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../organisms/Header"
 
@@ -17,8 +19,7 @@ export default function HomePage() {
       navigate(`Product`)
     };
   return (
-    <div className="home-container">
-      <Header/>
+    <div className="home-container page-container">
       <Link onClick={(e) => handleAllProductsClick(e)}>Show all</Link>
     </div>
   );

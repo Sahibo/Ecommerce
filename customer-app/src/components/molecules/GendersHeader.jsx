@@ -5,7 +5,7 @@ import {getByGender} from '../../store/reducer'
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch} from "react-redux";
 
-export default function GendersHeader ({ handleMouseEnter, handleMouseLeave }) {
+export default function GendersHeader ({ handleMouseEnter }) {
     const navigate = useNavigate()
     let dispatch = useDispatch()
 

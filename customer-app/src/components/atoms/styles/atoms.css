@@ -1,0 +1,14 @@
+.categories-container,  
+.parentCategories-container{
+    display: flex;
+    flex-direction: column;
+    padding-left: 15px;
+    margin-right: 20px;
+}
+
+.categories-list,
+.parentCategories-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

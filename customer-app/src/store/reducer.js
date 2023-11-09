@@ -21,7 +21,6 @@ export const registerUser = createAsyncThunk(
     let state = getState();
     const url = `${state.user.base}/Registration`;
 
-    console.log(url)
     const requestBody = {
       email,
       password,
@@ -35,15 +34,15 @@ export const registerUser = createAsyncThunk(
       body: JSON.stringify(requestBody),
     });
 
-    console.log(response)
+    let message = await response.text()
+    return message;
 
-
-    if (response.ok) {
-      const data = await response.json();
-      console.error("Registration success");
-    } else {
-      console.error("Registration error");
-    }
+    // if (response.ok) {
+    //   const data = await response.json();
+    //   console.error("Registration success");
+    // } else {
+    //   console.error("Registration error");
+    // }
   }
 );
 
@@ -54,7 +53,6 @@ export const getByGender = createAsyncThunk(
   async (gender, { getState }) => {
     const state = getState();
     const url = `${state.products.base}/Gender/${gender}`;
-    console.log(url);
 
     const response = await fetch(url);
     if (!response.ok) {
@@ -75,12 +73,12 @@ export const getById = createAsyncThunk(
   async (id, { getState }) => {
     const state = getState();
     const url = `${state.products.base}/${id}`;
-    console.log(url);
 
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error('Failed to fetch product by id');
     }
+    
     const data = await response.json();
     return data;
   }
@@ -133,14 +131,23 @@ const productsSlice = createSlice({
 const userSlice = createSlice({
   name: 'user',
   initialState: {
-    base: 'https://localhost:44313/User'
+    base: 'https://localhost:44313/User',
+    message: ''
   },
   reducers: {
 
   },
   extraReducers: (builder) => {
-
-  }
+    builder
+      .addCase(registerUser.pending, (state) => {
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.message = action.payload;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.message = action.payload;
+      })
+  },
 })
 
 export { productsSlice, userSlice };

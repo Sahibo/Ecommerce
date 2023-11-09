@@ -7,11 +7,16 @@ import HomePage  from './components/pages/HomePage';
 import CatalogPage from "./components/pages/CatalogPage";
 import ProductPage  from "./components/pages/ProductPage";
 
+import Header from "./components/organisms/Header"
+import Footer from "./components/organisms/Footer"
+
+
 
 function App() {
   return (
     <BrowserRouter>
       <div className='app'>
+        <Header/>
         <Routes>
           <Route path="/" element={<HomePage/>}/>
           <Route path="User/Registration" element={<RegistrationPage/>}/>
@@ -21,6 +26,7 @@ function App() {
           <Route path="/Product/Gender/:gender" element={<CatalogPage/>}/>
           <Route path="/ParentCategory/:id" element={<CatalogPage/>}/>
         </Routes>
+        <Footer/>
       </div>
     </BrowserRouter>
   );

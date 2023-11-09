@@ -1,3 +1,6 @@
+import '../../global.css';
+import './styles/pages.css';
+
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getById } from '../../store/reducer';
@@ -30,7 +33,7 @@ export default function ProductPage() {
  
   console.log(product)
   return (
-    <div className="main-container">
+    <div className="product-container page-container">
       <div>
         <h3>{product.name}</h3>
         <span>{product.variation.name}</span>

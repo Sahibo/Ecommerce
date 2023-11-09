@@ -22,10 +22,13 @@ export default function Header() {
   return (
     <div className="navbar-container" onMouseLeave={handleMouseLeave}>
       <header className="header-container">
-        <GendersHeader handleMouseEnter={handleMouseEnter} handleMouseLeave={handleMouseLeave} />
+        <GendersHeader handleMouseEnter={handleMouseEnter}/>
         <AccountNavigationHeader/>
       </header>
-      {!isCollapsed && <CollapsibleHeader />}
+      <div className='submenu-container'>
+        <CollapsibleHeader />
+        {/* {!isCollapsed && <CollapsibleHeader />} */}
+      </div>
     </div>
   );
 }
