@@ -3,7 +3,7 @@ import './styles/pages.css';
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getById } from '../../store/reducer';
+import { getProductById } from '../../store/reducer';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function ProductPage() {
@@ -15,16 +15,16 @@ export default function ProductPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resultAction = await dispatch(getById(id));
+        const resultAction = await dispatch(getProductById(id));
  
-        if (getById.fulfilled.match(resultAction)) {
+        if (getProductById.fulfilled.match(resultAction)) {
           const productData = resultAction.payload;
           setProduct(productData);
-        } else if (getById.rejected.match(resultAction)) {
+        } else if (getProductById.rejected.match(resultAction)) {
           console.error('Error while recieving data', resultAction.error.message);
         }
       } catch (error) {
-        console.error('Error when fetching getById:', error);
+        console.error('Error when fetching getProductById:', error);
       }
     };
  

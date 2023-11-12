@@ -1,5 +1,5 @@
 import '../../global.css'
-import './styles/header.css'
+import './styles/organisms.css'
 
 import CollapsibleHeader from "../molecules/CollapsibleHeader"
 import GendersHeader from "../molecules/GendersHeader"
@@ -17,6 +17,7 @@ export default function Header() {
 
   const handleMouseLeave = () => {
     setIsCollapsed(true);
+    
   };
 
   return (
@@ -26,8 +27,8 @@ export default function Header() {
         <AccountNavigationHeader/>
       </header>
       <div className='submenu-container'>
-        <CollapsibleHeader />
-        {/* {!isCollapsed && <CollapsibleHeader />} */}
+        {/* <CollapsibleHeader /> */}
+        {!isCollapsed && <CollapsibleHeader />}
       </div>
     </div>
   );

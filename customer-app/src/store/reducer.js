@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-export const getAll = createAsyncThunk(
+export const getAllProducts = createAsyncThunk(
   'Product',
   async (_, { getState }) => {
     const state = getState();
@@ -11,6 +11,80 @@ export const getAll = createAsyncThunk(
     }
     const data = await response.json();
     console.log(data);
+    return data;
+  }
+);
+
+export const getParentCategoriesByGender = createAsyncThunk(
+  'ParentCategory/Gender/:gender',
+  async (gender, { getState }) => {
+    const state = getState()
+    const url = `${state.parentCategories.base}/Gender/${gender}`;
+    const response = await fetch(url)
+    if (!response.ok) {
+      throw new Error('Failed to fetch parent categories');
+    }
+    const data = await response.json();
+    return data;
+  }
+)
+
+export const getCategories = createAsyncThunk(
+  'Categories',
+  async (parentCategoryId, { getState }) => {
+    const state = getState();
+    const parentCategoriesArray = state.parentCategories.parentCategoriesArray;
+
+
+    const allCategories = parentCategoriesArray.flatMap(
+      parentCategory => parentCategory.categories
+    );
+
+    const matchingCategories = allCategories.filter(
+      category => category.parentCategoryId === parentCategoryId
+    );
+
+
+    if (matchingCategories.length === 0) {
+      throw new Error('Categories not found');
+    }
+
+    return matchingCategories;
+  }
+);
+
+
+export const getProductByGender = createAsyncThunk(
+  'Product/Gender/:gender',
+  async (gender, { getState }) => {
+    const state = getState();
+    const url = `${state.products.base}/Gender/${gender}`;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null;
+      } else {
+        throw new Error('Failed to fetch products by gender');
+      }
+    }
+    const data = await response.json();
+    return data;
+  }
+);
+
+export const getProductById = createAsyncThunk(
+  'Product/:id',
+  async (id, { getState }) => {
+    const state = getState();
+    const url = `${state.products.base}/${id}`;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to fetch product by id');
+    }
+
+    const data = await response.json();
     return data;
   }
 );
@@ -35,54 +109,38 @@ export const registerUser = createAsyncThunk(
     });
 
     let message = await response.text()
+
+    console.log(message)
     return message;
-
-    // if (response.ok) {
-    //   const data = await response.json();
-    //   console.error("Registration success");
-    // } else {
-    //   console.error("Registration error");
-    // }
   }
 );
 
+export const loginUser = createAsyncThunk(
+  'User/Login',
+  async ({ email, password }, { getState }) => {
+    let state = getState();
+    const url = `${state.user.base}/Login`;
 
+    const requestBody = {
+      email,
+      password,
+    };
 
-export const getByGender = createAsyncThunk(
-  'Product/Gender/:gender',
-  async (gender, { getState }) => {
-    const state = getState();
-    const url = `${state.products.base}/Gender/${gender}`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
 
-    const response = await fetch(url);
-    if (!response.ok) {
-      if (response.status === 404) {
-        return null;
-      } else {
-        throw new Error('Failed to fetch products by gender');
-      }
-    }
-    const data = await response.json();
-    console.log(data);
-    return data;
+    let message = await response.text()
+    console.log(message)
+
+    return message;
   }
 );
 
-export const getById = createAsyncThunk(
-  'Product/:id',
-  async (id, { getState }) => {
-    const state = getState();
-    const url = `${state.products.base}/${id}`;
-
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error('Failed to fetch product by id');
-    }
-    
-    const data = await response.json();
-    return data;
-  }
-);
 
 const productsSlice = createSlice({
   name: "products",
@@ -97,35 +155,32 @@ const productsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAll.pending, (state) => {
+      .addCase(getAllProducts.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getAll.fulfilled, (state, action) => {
+      .addCase(getAllProducts.fulfilled, (state, action) => {
         state.productsArr = action.payload;
         state.isLoading = false;
         state.error = null;
       })
-      .addCase(getAll.rejected, (state, action) => {
+      .addCase(getAllProducts.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       })
-      .addCase(getByGender.pending, (state) => {
+      .addCase(getProductByGender.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getByGender.fulfilled, (state, action) => {
+      .addCase(getProductByGender.fulfilled, (state, action) => {
         state.productsArr = action.payload;
         state.isLoading = false;
         state.error = null;
       })
-      .addCase(getByGender.rejected, (state, action) => {
+      .addCase(getProductByGender.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       });
   },
 });
-
-
-
 
 
 const userSlice = createSlice({
@@ -150,4 +205,48 @@ const userSlice = createSlice({
   },
 })
 
-export { productsSlice, userSlice };
+
+const parentCategoriesSlice = createSlice({
+  name: 'parentCategories',
+  initialState: {
+    base: 'https://localhost:44313/ParentCategory',
+    message: '',
+    parentCategoriesArray: [],
+    categoriesArray: []
+  },
+  reducers: {
+    clearCategories: (state, action) => {
+      return { ...state, categoriesArray: [] };
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getParentCategoriesByGender.pending, (state, action) => {
+
+      })
+      .addCase(getParentCategoriesByGender.fulfilled, (state, action) => {
+        const data = action.payload;
+
+
+        state.parentCategoriesArray = data;
+      })
+      .addCase(getParentCategoriesByGender.rejected, (state, action) => {
+        state.message = action.payload;
+      })
+      .addCase(getCategories.pending, (state, action) => {
+
+      })
+      .addCase(getCategories.fulfilled, (state, action) => {
+        state.categoriesArray = action.payload;
+        console.log(state.categoriesArray)
+      })
+      .addCase(getCategories.rejected, (state, action) => {
+        state.message = action.payload;
+      })
+  },
+})
+
+export { productsSlice, userSlice, parentCategoriesSlice };
+
+export const { clearCategories } = parentCategoriesSlice.actions;
+export default parentCategoriesSlice.reducer;

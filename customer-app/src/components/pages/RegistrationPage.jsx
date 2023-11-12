@@ -5,23 +5,11 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../store/reducer";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { validateEmail, validatePassword } from '../../services/validators/LoginRegistrationValitator';
 
 export default function RegistrationPage() {
   const dispatch = useDispatch();
   const userState = useSelector((state) => state.user);
-  
-  // console.log(userState.message)
-  const validateEmail = (value) => {
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-    return !emailRegex.test(value) ? "Invalid email address" : undefined;
-  };
-
-  const validatePassword = (value) => {
-    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=-_'.!]).{6,40}$/;
-    return !passwordRegex.test(value)
-      ? "Password must be 6-40 characters and include 1 special symbol, 1 uppercase letter, and 1 number."
-      : undefined;
-  };
 
   const handleSubmit = async (values, { resetForm }) => {
     const { email, password } = values;
@@ -33,7 +21,7 @@ export default function RegistrationPage() {
   };
 
   return (
-    <div className="registration-container page-container">
+    <div className="login-register-container page-container">
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={handleSubmit}

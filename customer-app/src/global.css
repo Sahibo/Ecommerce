@@ -12,6 +12,7 @@ ul, li {
 a {
   text-decoration: none;
   color: #223843;
+  cursor: pointer;
 }
 
 .header-container {

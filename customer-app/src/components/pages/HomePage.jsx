@@ -4,7 +4,7 @@ import './styles/pages.css';
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../organisms/Header"
 
-import {getAll} from '../../store/reducer'
+import { getAllProducts } from '../../store/reducer'
 import { useDispatch} from "react-redux";;
 
 export default function HomePage() {
@@ -14,7 +14,7 @@ export default function HomePage() {
     const handleAllProductsClick = async (e) => {
       e.preventDefault();
       console.log("Start");
-      await dispatch(getAll())
+      await dispatch(getAllProducts())
       console.log("end");
       navigate(`Product`)
     };
