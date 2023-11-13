@@ -6,7 +6,7 @@ import ProductCard from "../molecules/ProductCard"
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+ 
 export default function ProductCards() {
   let products = useSelector((state) => state.products.productsArr);
 

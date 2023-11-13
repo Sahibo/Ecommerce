@@ -47,4 +47,58 @@
   border-color: #000;
 }
 
+/* Form Header Button */
 
+.form-header-button-container {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+
+  border-top: 1px #ddd solid;
+
+  cursor: pointer;
+}
+
+.form-header-button-container:first-child {
+  margin-right: 5px;
+  border-right: 1px #ddd solid;
+  
+  /* background-color: #ddd; */
+}
+
+.form-header-button-container:last-child {
+  margin-left: 5px;
+  border-left: 1px #ddd solid;
+
+  background-color: #ddd;
+}
+
+.form-header-button-container span {
+  font-size: 20px;
+  font-weight: 500;
+  
+  align-self: center;
+}
+
+
+.input-group-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.input-group-container label {
+  font-size: 18px;
+}
+
+.input-container {
+  height: 35px;
+  border: 1px #ddd solid;
+  background-color: #eff1f3;
+}
+
+.text-danger {
+  color: red;
+}

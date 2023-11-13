@@ -2,6 +2,7 @@ import '../../global.css';
 import './styles/molecules.css';
  
 import BagIcon  from '../../icons/bag_shopping_icon.svg';
+import FavIcon  from '../../icons/like_icon.svg';
 import AccountIcon  from '../../icons/account_icon.svg';
  
 import React from 'react';
@@ -16,7 +17,7 @@ export default function AccountNavigationHeader () {
     const handleAccountNavigationClick = async(result, e) => {
         e.preventDefault();
         
-        if (result === "Registration") {            
+        if (result === "Auth") {            
             navigate(`/User/${result}`)
         }
         else if (result === "Login")
@@ -37,18 +38,18 @@ export default function AccountNavigationHeader () {
         <div className='account-navigation-container container'>
             <ul className='buttons-list list'>
                 <li className='account-item item'>
-                    <Link onClick={(e) => handleAccountNavigationClick('Registration', e)}>
+                    <Link onClick={(e) => handleAccountNavigationClick('Auth', e)}>
                         <img src={AccountIcon} className="icon" alt="Icon"/>
                     </Link>
                 </li>
-                <li>
-                    <Link onClick={(e) => handleAccountNavigationClick('ShopCard', e)}>
-                        <img src={BagIcon} className="icon" alt="Icon"/>
+                <li className='account-item item'>
+                    <Link onClick={(e) => handleAccountNavigationClick('FavItems', e)}>
+                        <img src={FavIcon} className="icon" alt="Icon"/>
                     </Link>
                 </li>
-                <li>
-                    <Link onClick={(e) => handleAccountNavigationClick('Login', e)}>
-                        <i>Login</i>
+                <li className='account-item item'>
+                    <Link onClick={(e) => handleAccountNavigationClick('ShopCard', e)}>
+                        <img src={BagIcon} className="icon" alt="Icon"/>
                     </Link>
                 </li>
             </ul>

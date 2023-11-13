@@ -3,7 +3,7 @@ import './styles/pages.css';
 
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../organisms/Header"
-
+ 
 import { getAllProducts } from '../../store/reducer'
 import { useDispatch} from "react-redux";;
 

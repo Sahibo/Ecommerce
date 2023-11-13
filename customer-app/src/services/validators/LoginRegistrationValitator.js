@@ -3,9 +3,32 @@ export const validateEmail = (value) => {
     return !emailRegex.test(value) ? "Invalid email address" : undefined;
   };
   
-  export const validatePassword = (value) => {
-    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=-_'.!]).{6,40}$/;
-    return !passwordRegex.test(value)
-      ? "Password must be 6-40 characters and include 1 special symbol, 1 uppercase letter, and 1 number."
-      : undefined;
-  };
+export const validatePasswordLength = (value) => {
+  return value.length < 6 || value.length > 40
+    ? "Password must be between 6 and 40 characters."
+    : undefined;
+};
+
+export const validatePasswordSymbols = (value) => {
+  const symbolRegex = /[@#$%^&+=-_'.!]/;
+  return !symbolRegex.test(value)
+    ? "Password must include at least 1 special symbol."
+    : undefined;
+};
+
+export const validatePassword = (value) => {
+  const lengthError = validatePasswordLength(value);
+  if (lengthError) {
+    return lengthError;
+  }
+
+  const symbolError = validatePasswordSymbols(value);
+  if (symbolError) {
+    return symbolError;
+  }
+
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{1,}$/;
+  return !passwordRegex.test(value)
+    ? "Password must include 1 uppercase letter and 1 number."
+    : undefined;
+};
