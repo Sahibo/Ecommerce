@@ -1,20 +1,97 @@
 .page-container {
-    min-height: calc(100vh - 60px);
-    
-    /* background-color: beige; */
+  min-height: calc(100vh - 60px);
+
+  /* background-color: beige; */
 }
 
 .login-register-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    
-    width: 415px;
-    margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 
+  width: 415px;
+  margin: 0 auto;
 
-    /* margin-top: 20px; */
-    /* background-color: rgb(255, 193, 193); */
+  /* margin-top: 20px; */
+  /* background-color: rgb(255, 193, 193); */
+}
 
+/* Product Page */
+
+.product-page-container {
+  /* Add styling for the page container if needed */
+}
+
+.product-container {
+  display: flex;
+  align-items: center; /* Align items vertically in the center */
+}
+
+.product-images-container {
+  display: flex;
+  flex-direction: column; /* Images in a column */
+  align-items: flex-start; /* Align images to the left */
+
+  height: calc(100vh - 100px);
+  background-color: aqua;
+}
+
+.product-main-image-container {
+    height: 100%;
+    max-height: 400px; /* Adjust this value as needed */
+    width: auto;
+    object-fit: cover;
+}
+
+.product-main-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.product-thumbnails-container {
+  /* Add styling for the thumbnails container if needed */
+  margin-top: 10px; /* Add margin between main image and thumbnails */
+  display: flex;
+  
+  
+}
+
+.product-thumbnail {
+  /* Add styling for each thumbnail */
+  cursor: pointer;
+}
+
+.product-thumbnail.selected {
+  /* Add styling for the selected thumbnail */
+  
+  object-fit: cover;
+}
+
+.product-thumbnail-image {
+  /* Add styling for the thumbnail image */
+  width: 100%; /* Ensure the image doesn't exceed its container */
+  height: 250px; /* Maintain aspect ratio */
+
+  object-fit: cover;
+}
+
+.product-text-container {
+  margin-left: 20px; /* Add margin between images and text */
+}
+
+.product-text-container h3,
+.product-text-container span,
+.product-text-container ul {
+  margin-bottom: 10px; /* Add spacing between text elements */
+}
+
+.product-text-container ul {
+  list-style-type: none; /* Remove default list styling */
+  padding: 0; /* Remove default list padding */
+}
+
+.product-text-container li {
+  margin-bottom: 5px; /* Add spacing between list items */
 }

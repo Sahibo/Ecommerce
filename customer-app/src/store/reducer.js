@@ -74,7 +74,7 @@ export const getProductByGender = createAsyncThunk(
 );
 
 export const getProductById = createAsyncThunk(
-  'Product/:id',
+  'Product/:productId/ProductVariation/:productVariationId',
   async (id, { getState }) => {
     const state = getState();
     const url = `${state.products.base}/${id}`;
@@ -146,6 +146,7 @@ const productsSlice = createSlice({
   name: "products",
   initialState: {
     productsArr: [],
+    selectedProductsArr: [],
     isLoading: false,
     error: null,
     base: 'https://localhost:44313/Product'
@@ -176,6 +177,18 @@ const productsSlice = createSlice({
         state.error = null;
       })
       .addCase(getProductByGender.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getProductById.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getProductById.fulfilled, (state, action) => {
+        state.selectedProductsArr = action.payload;
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(getProductById.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       });

@@ -18,11 +18,11 @@ function App() {
         <Header/>
         <Routes>
           <Route path="/" element={<HomePage/>}/>
-          <Route path="User/Auth" element={<AuthPage/>}/>
+          <Route path="/User/Auth" element={<AuthPage/>}/>
           <Route path="/Product" element={<CatalogPage/>}/>
-          <Route path="/Product/:id" element={<ProductPage/>}/>
           <Route path="/Product/Gender/:gender" element={<CatalogPage/>}/>
           <Route path="/ParentCategory/:id" element={<CatalogPage/>}/>
+          <Route path="/Product/:productId/ProductVariation/:productVariationId" element={<ProductPage/>}/>
         </Routes>
         <Footer/>
       </div>

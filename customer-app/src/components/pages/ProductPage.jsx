@@ -1,53 +1,76 @@
-import '../../global.css';
-import './styles/pages.css';
+import "../../global.css";
+import "./styles/pages.css";
 
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { getProductById } from '../../store/reducer';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getProductById } from "../../store/reducer";
+import { useDispatch, useSelector } from "react-redux";
+
+
 
 export default function ProductPage() {
+  let dispatch = useDispatch();
+  let product = useSelector((state) => state.products.selectedProductsArr);
 
-  const { id } = useParams();
-  let dispatch = useDispatch()
-  const [product, setProduct] = useState(null);
+  let { productId, productVariationId } = useParams();
+  let productVariation;
+  let [mainImage, setMainImage] = useState(0);
   
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const resultAction = await dispatch(getProductById(id));
- 
-        if (getProductById.fulfilled.match(resultAction)) {
-          const productData = resultAction.payload;
-          setProduct(productData);
-        } else if (getProductById.rejected.match(resultAction)) {
-          console.error('Error while recieving data', resultAction.error.message);
-        }
-      } catch (error) {
-        console.error('Error when fetching getProductById:', error);
-      }
-    };
- 
-    fetchData();
-  }, [id, dispatch]);
- 
-  console.log(product)
+    dispatch(getProductById(productId));
+  }, [dispatch]);
+
+  if (product && product.productVariations) {
+    productVariation = product.productVariations.find(
+      (v) => v.id === parseInt(productVariationId, 10)
+    );
+  }
+
+  const handleImageClick = (index) => {
+    setMainImage(index);
+  };
+
   return (
-    <div className="product-container page-container">
-      <div>
-        <h3>{product.name}</h3>
-        <span>{product.variation.name}</span>
-      </div>
- 
-      {product && (
-        <div>
-          <ul>
-            <li>{product.name}</li>
-            <li>{product.make}</li>
-            <li>{product.description}</li>
-            <li>{product.gender}</li>
-            <li>{product.fabric}</li>
-          </ul>
+    <div className="product-page-container page-container">
+      {product && productVariation && (
+        <div className="product-container">
+          <div className="product-images-container">
+            <div className="product-main-image-container">
+              <img
+                src={`data:image/jpeg;base64,${productVariation.productImages[mainImage].imageData}`}
+                alt={`Product Img`}
+                className="product-main-image"
+              />
+            </div>
+
+            <div className="product-thumbnails-container">
+              {productVariation.productImages.map((image, index) => (
+                <div
+                  key={index}
+                  className={`product-thumbnail ${index === mainImage ? "selected" : ""}`}
+                  onClick={() => handleImageClick(index)}>
+                  
+                  <img
+                    src={`data:image/jpeg;base64,${image.imageData}`}
+                    alt={`Product Thumbnail ${index + 1}`}
+                    className="product-thumbnail-image"/>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h3>{product.name}</h3>
+            <span>{productVariation.name}</span>
+
+            <ul>
+              <li>{product.name}</li>
+              <li>{product.make}</li>
+              <li>{product.description}</li>
+              <li>{product.gender}</li>
+              <li>{product.fabric}</li>
+            </ul>
+          </div>
         </div>
       )}
     </div>
