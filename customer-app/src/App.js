@@ -1,36 +1,54 @@
-import './global.css';
+import "./global.css";
 
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import AuthPage  from './components/pages/AuthPage';
-import HomePage  from './components/pages/HomePage';
+import AuthPage from "./components/pages/AuthPage";
+import HomePage from "./components/pages/HomePage";
 import CatalogPage from "./components/pages/CatalogPage";
-import ProductPage  from "./components/pages/ProductPage";
-
-import Header from "./components/organisms/Header"
-import Footer from "./components/organisms/Footer"
-
-
+import ProductPage from "./components/pages/ProductPage";
+import AccountPage from "./components/pages/AccountPage";
+import Header from "./components/organisms/Header";
+import Footer from "./components/organisms/Footer";
+import { useSelector } from "react-redux";
 
 function App() {
+  const isAuthenticated = localStorage.getItem("isAuthenticated");
+
+  // const keyToRemove = 'isAuthenticated';
+  // localStorage.removeItem(keyToRemove);
+
   return (
     <BrowserRouter>
-      <div className='app'>
-        <Header/>
+      <div className="app">
+        <Header />
         <Routes>
-          <Route path="/" element={<HomePage/>}/>
-          <Route path="/User/Auth" element={<AuthPage/>}/>
-          <Route path="/Product" element={<CatalogPage/>}/>
-          <Route path="/Product/Gender/:gender" element={<CatalogPage/>}/>
-          <Route path="/Product/Category/:id" element={<CatalogPage/>}/>
-          <Route path="/ParentCategory/:id" element={<CatalogPage/>}/>
+          <Route path="/" element={<HomePage />} />
 
-          <Route path="/Product/:productId/ProductVariation/:productVariationId" element={<ProductPage/>}/>
+          {isAuthenticated ? (
+            <Route path="/User/Account" element={<AccountPage />} />
+          ) : (
+            <Route path="/User/Account" element={<AuthPage />} />
+          )}
+
+          {!isAuthenticated ? (
+            <Route path="/User/Auth" element={<AuthPage />} />
+          ) : (
+            <Route path="/User/Auth" element={<AccountPage />} />
+          )}
+
+          <Route path="/Product" element={<CatalogPage />} />
+          <Route path="/Product/Gender/:gender" element={<CatalogPage />} />
+          <Route path="/Product/Category/:id" element={<CatalogPage />} />
+          <Route path="/ParentCategory/:id" element={<CatalogPage />} />
+
+          <Route
+            path="/Product/:productId/ProductVariation/:productVariationId"
+            element={<ProductPage />}
+          />
         </Routes>
-        <Footer/>
+        <Footer />
       </div>
     </BrowserRouter>
   );
 }
-
 
 export default App;

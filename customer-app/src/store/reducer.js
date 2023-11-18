@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
+ 
 export const getAllProducts = createAsyncThunk(
   'Product',
   async (_, { getState }) => {
@@ -14,7 +14,7 @@ export const getAllProducts = createAsyncThunk(
     return data;
   }
 );
-
+ 
 export const getParentCategoriesByGender = createAsyncThunk(
   'ParentCategory/Gender/:gender',
   async (gender, { getState }) => {
@@ -28,38 +28,38 @@ export const getParentCategoriesByGender = createAsyncThunk(
     return data;
   }
 );
-
+ 
 export const getCategoriesByParentId = createAsyncThunk(
   'Categories',
   async (parentCategoryId, { getState }) => {
     const state = getState();
     const parentCategoriesArray = state.parentCategories.parentCategoriesArray;
-
-
+ 
+ 
     const allCategories = parentCategoriesArray.flatMap(
       parentCategory => parentCategory.categories
     );
-
+ 
     const matchingCategories = allCategories.filter(
       category => category.parentCategoryId === parentCategoryId
     );
-
-
+ 
+ 
     if (matchingCategories.length === 0) {
       throw new Error('Categories not found');
     }
-
+ 
     return matchingCategories;
   }
 );
-
+ 
 export const getProductsByCategoryId = createAsyncThunk(
   'Product/Category/:id',
   async (id, { getState }) => {
     const state = getState();
     const url = `${state.products.base}/Category/${id}`;
     const response = await fetch(url);
-
+ 
     if (!response.ok) {
       if (response.status === 404) {
         return null;
@@ -67,7 +67,7 @@ export const getProductsByCategoryId = createAsyncThunk(
         throw new Error('Failed to fetch products by gender');
       }
     }
-
+ 
     console.log(response)
     const data = await response.json();
     console.log(data)
@@ -75,14 +75,14 @@ export const getProductsByCategoryId = createAsyncThunk(
   }
 );
  
-
+ 
 export const getProductByGender = createAsyncThunk(
   'Product/Gender/:gender',
   async (gender, { getState }) => {
     const state = getState();
     const url = `${state.products.base}/Gender/${gender}`;
     const response = await fetch(url);
-
+ 
     if (!response.ok) {
       if (response.status === 404) {
         return null;
@@ -95,35 +95,35 @@ export const getProductByGender = createAsyncThunk(
     return data;
   }
 );
-
+ 
 export const getProductById = createAsyncThunk(
   'Product/:productId/ProductVariation/:productVariationId',
   async (id, { getState }) => {
     const state = getState();
     const url = `${state.products.base}/${id}`;
-
+ 
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error('Failed to fetch product by id');
     }
-
+ 
     const data = await response.json();
     return data;
   }
 );
-
+ 
 export const registerUser = createAsyncThunk(
   'User/Registration',
-  async ({ email, password }, { getState }) => {
+  async ({ email, password }, { getState, rejectWithValue }) => {
     try {
       let state = getState();
       const url = `${state.user.base}/Registration`;
-
+ 
       const requestBody = {
         email,
         password,
       };
-
+ 
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -131,33 +131,36 @@ export const registerUser = createAsyncThunk(
         },
         body: JSON.stringify(requestBody),
       });
-
+ 
+      if (!response.ok) {
+        throw new Error('Failed to register user');
+      }
+ 
       const token = await response.text();
-
+ 
       localStorage.setItem('accessToken', token);
-
+ 
       return token;
-    } 
-    
-    catch (error) {
+    } catch (error) {
       console.error(error.message);
-      throw error;
+      return rejectWithValue(error.message);
     }
   }
 );
-
+ 
+ 
 export const loginUser = createAsyncThunk(
   'User/Login',
   async ({ email, password }, { getState, rejectWithValue }) => {
     try {
       let state = getState();
       const url = `${state.user.base}/Login`;
-
+ 
       const requestBody = {
         email,
         password,
       };
-
+ 
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -165,20 +168,25 @@ export const loginUser = createAsyncThunk(
         },
         body: JSON.stringify(requestBody),
       });
-
-
+ 
+      if (!response.ok) {
+        throw new Error('Failed to log in');
+      }
+ 
       const token = await response.text();
-
+ 
+      console.log(token)
       localStorage.setItem('accessToken', token);
-
+ 
       return token;
     } catch (error) {
       console.error(error.message);
-      return rejectWithValue(error.message); // Reject the promise with the error message
+      return rejectWithValue({ error: error.message });
     }
   }
 );
-
+ 
+ 
 const productsSlice = createSlice({
   name: "products",
   initialState: {
@@ -189,7 +197,7 @@ const productsSlice = createSlice({
     base: 'https://localhost:44313/Product'
   },
   reducers: {
-
+ 
   },
   extraReducers: (builder) => {
     builder
@@ -241,7 +249,7 @@ const productsSlice = createSlice({
         state.isLoading = false;
         state.error = action.error.message;
       });
-      
+     
   },
 });
 
@@ -250,12 +258,13 @@ const userSlice = createSlice({
   initialState: {
     base: 'https://localhost:44313/User',
     message: '',
-    isAuthenticated: false, 
-    accessToken: null,     
-    error: '' 
+    accessToken: null,
+    error: '',
+    isAuthenticated: false,
   },
   reducers: {
     clearAuthState: (state) => {
+      console.log("clearAuthState false")
       state.isAuthenticated = false;
       state.accessToken = null;
       state.message = '';
@@ -263,37 +272,39 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
-      .addCase(loginUser.pending, (state) => {
-      })
+      .addCase(loginUser.pending, (state) => {})
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.isAuthenticated = true;
+        console.log("loginUser true")
+        localStorage.setItem('isAuthenticated', true);
+        console.log(`action payload: ${action.payload}`)
         state.accessToken = action.payload;
-        console.log('fulfii')
         state.message = 'Login successful';
       })
       .addCase(loginUser.rejected, (state, action) => {
-        state.isAuthenticated = false;
+        console.log("loginUser false")
+        localStorage.setItem('isAuthenticated', false);
         state.accessToken = null;
-        state.error = action.payload;
-        console.log(state.error)
+        state.error = action.payload.error;
       })
-      .addCase(registerUser.pending, (state) => {
-      })
+      .addCase(registerUser.pending, (state) => {})
       .addCase(registerUser.fulfilled, (state, action) => {
-        state.isAuthenticated = true;
+        console.log("registerUser true")
+        localStorage.setItem('isAuthenticated', true);
         state.accessToken = action.payload;
-        console.log(state.accessToken)
         state.message = 'Registration successful';
       })
       .addCase(registerUser.rejected, (state, action) => {
+        console.log("registerUser false")
+
         state.isAuthenticated = false;
         state.accessToken = null;
-        state.message = action.payload;
-      })
+        state.error = action.payload;
+      });
   },
 });
-
+ 
+ 
+ 
 const parentCategoriesSlice = createSlice({
   name: 'parentCategories',
   initialState: {
@@ -310,19 +321,19 @@ const parentCategoriesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getParentCategoriesByGender.pending, (state, action) => {
-
+ 
       })
       .addCase(getParentCategoriesByGender.fulfilled, (state, action) => {
         const data = action.payload;
-
-
+ 
+ 
         state.parentCategoriesArray = data;
       })
       .addCase(getParentCategoriesByGender.rejected, (state, action) => {
         state.message = action.payload;
       })
       .addCase(getCategoriesByParentId.pending, (state, action) => {
-
+ 
       })
       .addCase(getCategoriesByParentId.fulfilled, (state, action) => {
         state.categoriesArray = action.payload;
@@ -333,10 +344,10 @@ const parentCategoriesSlice = createSlice({
       })
   },
 })
-
+ 
 export { productsSlice, userSlice, parentCategoriesSlice };
-
+ 
 export const { clearCategories } = parentCategoriesSlice.actions;
 export const { clearAuthState } = userSlice.actions;
-
+ 
 export default parentCategoriesSlice.reducer;
