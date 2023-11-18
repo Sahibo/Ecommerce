@@ -28,7 +28,6 @@ public partial class EcommerceContext : IdentityDbContext<AspNetUser>
     public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
 
     public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
-
     public virtual DbSet<Category> Categories { get; set; }
 
     public virtual DbSet<OnlinePayment> OnlinePayments { get; set; }
@@ -50,7 +49,7 @@ public partial class EcommerceContext : IdentityDbContext<AspNetUser>
     public virtual DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
     public virtual DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
-    public virtual DbSet<Favorite> Favorites { get; set; } // New DbSet for Favorites
+    public virtual DbSet<Favorite> Favorites { get; set; }
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -61,8 +60,37 @@ public partial class EcommerceContext : IdentityDbContext<AspNetUser>
         base.OnModelCreating(modelBuilder);
         modelBuilder.Ignore<IdentityUser>();
         modelBuilder.Ignore<IdentityRole>();
-        
-        
+
+
+        modelBuilder.Entity<AspNetRoleClaim>()
+        .HasOne(rc => rc.Role)
+        .WithMany(r => r.AspNetRoleClaims)
+        .HasForeignKey(rc => rc.RoleId)
+        .HasPrincipalKey(r => r.Id)
+        .IsRequired();
+
+
+        modelBuilder.Entity<AspNetUserClaim>()
+        .HasOne(uc => uc.User)
+        .WithMany(u => u.AspNetUserClaims)
+        .HasForeignKey(uc => uc.UserId)
+        .HasPrincipalKey(u => u.Id)
+        .IsRequired();
+
+        modelBuilder.Entity<AspNetUserLogin>()
+            .HasOne(ul => ul.User)
+            .WithMany(u => u.AspNetUserLogins)
+            .HasForeignKey(ul => ul.UserId)
+            .HasPrincipalKey(u => u.Id)
+            .IsRequired();
+
+        modelBuilder.Entity<AspNetUserToken>()
+            .HasOne(ut => ut.User)
+            .WithMany(u => u.AspNetUserTokens)
+            .HasForeignKey(ut => ut.UserId)
+            .HasPrincipalKey(u => u.Id)
+            .IsRequired();
+
         modelBuilder.Entity<Address>(entity =>
         {
             entity.HasIndex(e => e.UserId, "IX_Addresses_UserId");
@@ -71,7 +99,7 @@ public partial class EcommerceContext : IdentityDbContext<AspNetUser>
 
             entity.HasOne(d => d.User).WithMany(p => p.Addresses).HasForeignKey(d => d.UserId);
         });
-        
+
         modelBuilder.Entity<Favorite>(entity =>
         {
             entity.HasIndex(e => e.UserId, "IX_Addresses_UserId");
@@ -153,6 +181,7 @@ public partial class EcommerceContext : IdentityDbContext<AspNetUser>
             entity.Property(e => e.IsDeleted)
                 .IsRequired()
                 .HasDefaultValueSql("(CONVERT([bit],(0)))");
+            entity.Property(e => e.Gender).HasDefaultValueSql("((2))");
             entity.Property(e => e.Name).HasMaxLength(25);
         });
 
@@ -162,7 +191,6 @@ public partial class EcommerceContext : IdentityDbContext<AspNetUser>
 
             entity.Property(e => e.Description).HasMaxLength(200);
             entity.Property(e => e.Fabric).HasMaxLength(100);
-            entity.Property(e => e.Gender).HasDefaultValueSql("((2))");
             entity.Property(e => e.IsDeleted)
                 .IsRequired()
                 .HasDefaultValueSql("(CONVERT([bit],(0)))");

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace EcommerceAPI;
 public enum Gender : int
@@ -16,8 +17,6 @@ public partial class Product
 
     public string Make { get; set; } = null!;
 
-    public int Gender { get; set; }
-
     public string Fabric { get; set; } = null!;
 
     public string Description { get; set; } = null!;
@@ -25,7 +24,7 @@ public partial class Product
     public bool? IsDeleted { get; set; }
 
     public int CategoryId { get; set; }
-
+    [JsonIgnore]
     public virtual Category Category { get; set; } = null!;
 
     public virtual ICollection<ProductVariation> ProductVariations { get; set; } = new List<ProductVariation>();

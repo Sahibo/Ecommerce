@@ -8,6 +8,7 @@ public partial class ParentCategory
     public int Id { get; set; }
 
     public string Name { get; set; } = null!;
+    public int Gender { get; set; }
 
     public bool? IsDeleted { get; set; }
 

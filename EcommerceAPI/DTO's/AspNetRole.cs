@@ -1,18 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
 
-namespace EcommerceAPI;
-
-public partial class AspNetRole : IdentityRole
+namespace EcommerceAPI
 {
-    public string? Name { get; set; }
-
-    public string? NormalizedName { get; set; }
-
-    public string? ConcurrencyStamp { get; set; }
-
-    public virtual ICollection<AspNetRoleClaim> AspNetRoleClaims { get; set; } = new List<AspNetRoleClaim>();
-
-    public virtual ICollection<AspNetUser> Users { get; set; } = new List<AspNetUser>();
+    public partial class AspNetRole : IdentityRole
+    {
+        public virtual ICollection<AspNetRoleClaim> AspNetRoleClaims { get; set; } = new List<AspNetRoleClaim>();
+        public virtual ICollection<AspNetUser> Users { get; set; } = new List<AspNetUser>();
+    }
 }
