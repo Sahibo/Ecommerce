@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 
 export default function ProductCards() {
   let products = useSelector((state) => state.products.productsArr);
-  //console.log(products[0].productVariations[0].id);
+  console.log(products);
 
   const navigate = useNavigate();
 

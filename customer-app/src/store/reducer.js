@@ -27,9 +27,9 @@ export const getParentCategoriesByGender = createAsyncThunk(
     const data = await response.json();
     return data;
   }
-)
+);
 
-export const getCategories = createAsyncThunk(
+export const getCategoriesByParentId = createAsyncThunk(
   'Categories',
   async (parentCategoryId, { getState }) => {
     const state = getState();
@@ -53,14 +53,36 @@ export const getCategories = createAsyncThunk(
   }
 );
 
+export const getProductsByCategoryId = createAsyncThunk(
+  'Product/Category/:id',
+  async (id, { getState }) => {
+    const state = getState();
+    const url = `${state.products.base}/Category/${id}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null;
+      } else {
+        throw new Error('Failed to fetch products by gender');
+      }
+    }
+
+    console.log(response)
+    const data = await response.json();
+    console.log(data)
+    return data;
+  }
+);
+ 
 
 export const getProductByGender = createAsyncThunk(
   'Product/Gender/:gender',
   async (gender, { getState }) => {
     const state = getState();
     const url = `${state.products.base}/Gender/${gender}`;
-
     const response = await fetch(url);
+
     if (!response.ok) {
       if (response.status === 404) {
         return null;
@@ -69,6 +91,7 @@ export const getProductByGender = createAsyncThunk(
       }
     }
     const data = await response.json();
+    console.log(data)
     return data;
   }
 );
@@ -92,55 +115,69 @@ export const getProductById = createAsyncThunk(
 export const registerUser = createAsyncThunk(
   'User/Registration',
   async ({ email, password }, { getState }) => {
-    let state = getState();
-    const url = `${state.user.base}/Registration`;
+    try {
+      let state = getState();
+      const url = `${state.user.base}/Registration`;
 
-    const requestBody = {
-      email,
-      password,
-    };
+      const requestBody = {
+        email,
+        password,
+      };
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    });
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
 
-    let message = await response.text()
+      const token = await response.text();
 
-    console.log(message)
-    return message;
+      localStorage.setItem('accessToken', token);
+
+      return token;
+    } 
+    
+    catch (error) {
+      console.error(error.message);
+      throw error;
+    }
   }
 );
 
 export const loginUser = createAsyncThunk(
   'User/Login',
-  async ({ email, password }, { getState }) => {
-    let state = getState();
-    const url = `${state.user.base}/Login`;
+  async ({ email, password }, { getState, rejectWithValue }) => {
+    try {
+      let state = getState();
+      const url = `${state.user.base}/Login`;
 
-    const requestBody = {
-      email,
-      password,
-    };
+      const requestBody = {
+        email,
+        password,
+      };
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    });
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
 
-    let message = await response.text()
-    console.log(message)
 
-    return message;
+      const token = await response.text();
+
+      localStorage.setItem('accessToken', token);
+
+      return token;
+    } catch (error) {
+      console.error(error.message);
+      return rejectWithValue(error.message); // Reject the promise with the error message
+    }
   }
 );
-
 
 const productsSlice = createSlice({
   name: "products",
@@ -191,33 +228,71 @@ const productsSlice = createSlice({
       .addCase(getProductById.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
+      })
+      .addCase(getProductsByCategoryId.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getProductsByCategoryId.fulfilled, (state, action) => {
+        state.productsArr = action.payload;
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(getProductsByCategoryId.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
       });
+      
   },
 });
-
 
 const userSlice = createSlice({
   name: 'user',
   initialState: {
     base: 'https://localhost:44313/User',
-    message: ''
+    message: '',
+    isAuthenticated: false, 
+    accessToken: null,     
+    error: '' 
   },
   reducers: {
-
+    clearAuthState: (state) => {
+      state.isAuthenticated = false;
+      state.accessToken = null;
+      state.message = '';
+    },
   },
   extraReducers: (builder) => {
     builder
+
+      .addCase(loginUser.pending, (state) => {
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.isAuthenticated = true;
+        state.accessToken = action.payload;
+        console.log('fulfii')
+        state.message = 'Login successful';
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.isAuthenticated = false;
+        state.accessToken = null;
+        state.error = action.payload;
+        console.log(state.error)
+      })
       .addCase(registerUser.pending, (state) => {
       })
       .addCase(registerUser.fulfilled, (state, action) => {
-        state.message = action.payload;
+        state.isAuthenticated = true;
+        state.accessToken = action.payload;
+        console.log(state.accessToken)
+        state.message = 'Registration successful';
       })
       .addCase(registerUser.rejected, (state, action) => {
+        state.isAuthenticated = false;
+        state.accessToken = null;
         state.message = action.payload;
       })
   },
-})
-
+});
 
 const parentCategoriesSlice = createSlice({
   name: 'parentCategories',
@@ -246,14 +321,14 @@ const parentCategoriesSlice = createSlice({
       .addCase(getParentCategoriesByGender.rejected, (state, action) => {
         state.message = action.payload;
       })
-      .addCase(getCategories.pending, (state, action) => {
+      .addCase(getCategoriesByParentId.pending, (state, action) => {
 
       })
-      .addCase(getCategories.fulfilled, (state, action) => {
+      .addCase(getCategoriesByParentId.fulfilled, (state, action) => {
         state.categoriesArray = action.payload;
         console.log(state.categoriesArray)
       })
-      .addCase(getCategories.rejected, (state, action) => {
+      .addCase(getCategoriesByParentId.rejected, (state, action) => {
         state.message = action.payload;
       })
   },
@@ -262,4 +337,6 @@ const parentCategoriesSlice = createSlice({
 export { productsSlice, userSlice, parentCategoriesSlice };
 
 export const { clearCategories } = parentCategoriesSlice.actions;
+export const { clearAuthState } = userSlice.actions;
+
 export default parentCategoriesSlice.reducer;

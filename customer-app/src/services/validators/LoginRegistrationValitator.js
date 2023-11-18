@@ -1,8 +1,8 @@
 export const validateEmail = (value) => {
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-    return !emailRegex.test(value) ? "Invalid email address" : undefined;
-  };
-  
+  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+  return !emailRegex.test(value) ? "Invalid email address" : undefined;
+};
+
 export const validatePasswordLength = (value) => {
   return value.length < 6 || value.length > 40
     ? "Password must be between 6 and 40 characters."
@@ -18,6 +18,7 @@ export const validatePasswordSymbols = (value) => {
 
 export const validatePassword = (value) => {
   const lengthError = validatePasswordLength(value);
+
   if (lengthError) {
     return lengthError;
   }

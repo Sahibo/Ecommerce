@@ -2,6 +2,8 @@ import '../../global.css';
 
 import React from 'react';
 import { getProductByGender, getParentCategoriesByGender, clearCategories } from '../../store/reducer';
+//import { getParentCategoriesByGender, clearCategories } from '../../store/reducer';
+
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector} from "react-redux";
 
@@ -12,8 +14,11 @@ export default function GendersHeader ({ handleMouseEnter }) {
 
     const handleGenderClick = async(gender, e) => {
         e.preventDefault();
-        await dispatch(getProductByGender(gender))
+        //await dispatch(getProductByGender(gender))
+        dispatch(getProductByGender(gender));
         navigate(`Product/Gender/${gender}`)
+
+        //dispatch(clearCategories());
       };
 
     const handleGenderMouseEnter = (gender) => {

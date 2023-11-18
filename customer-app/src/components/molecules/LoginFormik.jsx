@@ -1,29 +1,40 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form, Field } from "formik";
 
-
+import { useNavigate } from 'react-router-dom';
 import { loginUser } from "../../store/reducer";
 import InputField from "../atoms/InputField";
-import { validateEmail, validatePassword} from "../../services/validators/LoginRegistrationValitator";
+import { validateEmail, validatePasswordLength } from "../../services/validators/LoginRegistrationValitator";
 
 export default function LoginFormik() {
-  const dispatch = useDispatch();
-  const userState = useSelector((state) => state.user); 
- 
-  const handleSubmit = async (values, { resetForm }) => {
-    const { email, password, rememberMe } = values;
-    dispatch(loginUser({ email, password, rememberMe }));
- 
-    if (userState.loginStatus === "fulfilled") {
-      resetForm();
+  const errorMessage = useSelector((state) => state.user.error);
+  const navigate = useNavigate()
+  const userToken = localStorage.getItem("accessToken")
+
+  useEffect(() =>
+  {
+    if(userToken != null) {
+      navigate('/'); 
     }
+  }, [userToken])
+
+  const dispatch = useDispatch();
+
+  const handleSubmit = async (values) => {
+    
+    const { email, password, rememberMe } = values;
+
+    await dispatch(loginUser({ email, password, rememberMe }));
+
+
   };
- 
+
+
   return (
     <div className="loginForm-container molecule-container">
       <Formik initialValues={{ email: "", password: "" }}
-         onSubmit={handleSubmit}>
+        onSubmit={handleSubmit}>
 
         <Form className="common-form-container">
           <InputField
@@ -39,8 +50,9 @@ export default function LoginFormik() {
             id="password"
             name="password"
             placeholder="Password"
-            validate={(value) => validatePassword(value)}
+            validate={(value) => validatePasswordLength(value)}
           />
+            {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
 
           <div className="form-checkBox">
             <label>

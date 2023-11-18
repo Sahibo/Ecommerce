@@ -7,7 +7,6 @@ import { getProductById } from "../../store/reducer";
 import { useDispatch, useSelector } from "react-redux";
 
 
-
 export default function ProductPage() {
   let dispatch = useDispatch();
   let product = useSelector((state) => state.products.selectedProductsArr);

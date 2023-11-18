@@ -1,10 +1,12 @@
-import '../../global.css';
-import './styles/atoms.css';
+import React from "react";
 
-export default function AuthFormHeaderButton({text}) {
-  
+export default function AuthFormHeaderButton({ text, onClick }) {
+  const handleButtonClick = () => {
+    onClick(text);
+  };
+
   return (
-    <div className="form-header-button-container">
+    <div className="form-header-button-container" onClick={handleButtonClick}>
       <span>{text}</span>
     </div>
   );

@@ -39,23 +39,21 @@
 
 .product-main-image-container {
     height: 100%;
+    width: 100%;
     max-height: 400px; /* Adjust this value as needed */
-    width: auto;
-    object-fit: cover;
+
+    object-fit: contain;
 }
 
 .product-main-image {
     height: 100%;
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .product-thumbnails-container {
-  /* Add styling for the thumbnails container if needed */
-  margin-top: 10px; /* Add margin between main image and thumbnails */
+  /* margin: 10px; */
   display: flex;
-  
-  
 }
 
 .product-thumbnail {
@@ -66,7 +64,7 @@
 .product-thumbnail.selected {
   /* Add styling for the selected thumbnail */
   
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .product-thumbnail-image {
@@ -74,7 +72,7 @@
   width: 100%; /* Ensure the image doesn't exceed its container */
   height: 250px; /* Maintain aspect ratio */
 
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .product-text-container {

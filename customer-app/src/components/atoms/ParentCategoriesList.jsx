@@ -1,14 +1,15 @@
 import '../../global.css';
-import { getCategories } from '../../store/reducer';
 import './styles/atoms.css';
+
+import { getCategoriesByParentId } from '../../store/reducer';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function ParentCategoriesList() {
   const parentCategories = useSelector((state) => state.parentCategories.parentCategoriesArray);
   const dispatch = useDispatch();
 
-  const getCategoriesByParentId = (id) => {
-    dispatch(getCategories(id));
+  const getCategories = (id) => {
+    dispatch(getCategoriesByParentId(id));
     
   };
 
@@ -18,7 +19,7 @@ export default function ParentCategoriesList() {
         {Array.isArray(parentCategories) && parentCategories.length > 0 ?
           (parentCategories.map((parentCategory, index) => (
             <li className='parentCategories-item item' key={index}>
-              <a onClick={() => getCategoriesByParentId(parentCategory.id)}>{parentCategory.name}</a>
+              <a onClick={() => getCategories(parentCategory.id)}>{parentCategory.name}</a>
             </li>
           ))) : <>Empty</>}
       </ul>
