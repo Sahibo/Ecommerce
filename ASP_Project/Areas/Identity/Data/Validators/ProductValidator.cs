@@ -29,8 +29,8 @@ namespace ASP_Project.Areas.Identity.Data.Validators
         {
             NameMsg = "Product\'s name must be less than 50 characters and contain only letters!";
             MakeMsg = "Product\'s make must be less than 25 characters and contain only letters!";
-            FabricMsg = "Product\'s fabric must be less than 100 characters!";
-            DescriptionMsg = "Product\'s description must be less than 100 characters!";
+            FabricMsg = "Product\'s fabric must be less than 150 characters!";
+            DescriptionMsg = "Product\'s description must be less than 200 characters!";
         }
 
         private static bool CheckName(string? name)
@@ -49,13 +49,13 @@ namespace ASP_Project.Areas.Identity.Data.Validators
         private static bool CheckFabric(string? fabric)
         {
             Regex re = new(@"^[a-zA-Z0-9!.\-;:,@#%\s]+$");
-            return  fabric != null && re.IsMatch(fabric) && fabric.Length is > 0 and <= 50;
+            return  fabric != null && re.IsMatch(fabric) && fabric.Length is > 0 and <= 150;
         }
 
         private static bool CheckDescription(string? description)
         {
             Regex re = new(@"^[a-zA-Z0-9!.\-;:,@#%\s]+$");
-            return description != null && re.IsMatch(description) && description.Length is > 0 and <= 100;
+            return description != null && re.IsMatch(description) && description.Length is > 0 and <= 200;
         }
     }
 }

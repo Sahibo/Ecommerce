@@ -1,28 +1,43 @@
-﻿@using ASP_Project.Areas.Identity.Data.Models
+﻿@using ASP_Project.Areas.Identity.Data.DbContexts;
+@using ASP_Project.Areas.Identity.Data.Models
 @model Category
+@inject UserContext _context
+ 
 @{
 	ViewData["Title"] = "Delete category";
+	var parentCategories = _context.ParentCategories.ToList();
+ 
 }
-
+ 
 <form method="post" asp-action="Delete">
-	<input asp-for="Id" hidden />
-	<div class="border p-3 mt-4">
-		<div class="row pb-2">
-			<h2 class="text-primary">Delete Category</h2>
-			<hr />
-		</div>
-		<div class="mb-3">
-			<label asp-for="Name"></label>
-            <input asp-for="Name" disabled class="form-control" />
-            <span asp-validation-for="Products" class="text-danger"></span> 
-		</div>
-		<button type="submit" class="btn btn-danger" style="width:150px">Delete</button>
-		<a asp-controller="Category" asp-action="Index" class="btn btn-secondary" style="width:150px">
+<input asp-for="Id" hidden />
+<div class="border p-3 mt-4">
+<div class="row pb-2">
+<h2 class="text-primary">Delete Category</h2>
+<hr />
+</div>
+<div class="mb-3">
+<select asp-for="ParentCategoryId" class="form-select" disabled>
+<option value="" selected>Select a category</option>
+				@foreach (var parentCategory in parentCategories.Where(pc => !pc.IsDeleted))
+				{
+<option value="@parentCategory.Id">@parentCategory.Name</option>
+				}
+</select>
+<span asp-validation-for="ParentCategoryId" class="text-danger"></span>
+</div>
+<div class="mb-3">
+<label asp-for="Name"></label>
+<input asp-for="Name" disabled class="form-control" />
+<span asp-validation-for="Products" class="text-danger"></span> 
+</div>
+<button type="submit" class="btn btn-danger" style="width:150px">Delete</button>
+<a asp-controller="Category" asp-action="Index" class="btn btn-secondary" style="width:150px">
 			Back to List
-		</a>
-	</div>
+</a>
+</div>
 </form>
-
+ 
 @{
-	<partial name="_ValidationScriptsPartial" />
+<partial name="_ValidationScriptsPartial" />
 }

@@ -12,11 +12,15 @@
 			<h2 class="text-primary">Delete Parent Category</h2>
 			<hr />
 		</div>
-        <div class="mb-3">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" disabled class="form-control" />
-            <span asp-validation-for="Categories" class="text-danger"></span> 
-        </div>
+		<div class="mb-3">
+			<label asp-for="Name"></label>
+			<input asp-for="Name" disabled class="form-control" />
+			<span asp-validation-for="Categories" class="text-danger"></span> 
+		</div>
+		<div class="mb-3">
+        			<label asp-for="Gender"></label>
+        			<input asp-for="Gender" disabled class="form-control" />
+        		</div>
 		<button type="submit" class="btn btn-danger" style="width:150px">Delete</button>
 		<a asp-controller="ParentCategory" asp-action="Index" class="btn btn-secondary" style="width:150px">
 			Back to List

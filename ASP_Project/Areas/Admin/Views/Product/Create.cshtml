@@ -30,16 +30,6 @@
 			<span asp-validation-for="Description" class="text-danger"></span>
 		</div>
 		<div class="mb-3">
-			<select asp-for="Gender" class="form-select">
-				<option value="@Gender.Unisex" selected>Select a gender</option>
-				@foreach (var gender in Enum.GetValues(typeof(Gender)))
-				{
-					<option value="@gender">@gender</option>
-				}
-				</select>
-			<span asp-validation-for="Gender" class="text-danger"></span>
-		</div>
-		<div class="mb-3">
 			<label asp-for="Fabric"></label>
 			<input asp-for="Fabric" class="form-control" />
 			<span asp-validation-for="Fabric" class="text-danger"></span>

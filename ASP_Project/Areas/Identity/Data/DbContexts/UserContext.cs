@@ -32,6 +32,7 @@ public class UserContext : IdentityDbContext<ApplicationUser>
             entity.HasKey(pc => pc.Id);
             entity.Property(pc => pc.Id).ValueGeneratedOnAdd();
             entity.Property(pc => pc.Name).IsRequired().HasMaxLength(25);
+            entity.Property(pc => pc.Gender).IsRequired().HasDefaultValue(Gender.Unisex);
             entity.Property(pc => pc.IsDeleted).HasDefaultValue(false);
 
             entity.HasIndex(pc => pc.Name).IsUnique();
@@ -58,7 +59,6 @@ public class UserContext : IdentityDbContext<ApplicationUser>
             entity.Property(p => p.Id).ValueGeneratedOnAdd();
             entity.Property(p => p.Name).IsRequired().HasMaxLength(50);
             entity.Property(p => p.Make).IsRequired().HasMaxLength(25);
-            entity.Property(p => p.Gender).IsRequired().HasDefaultValue(Gender.Unisex);
             entity.Property(p => p.Fabric).HasMaxLength(100);
             entity.Property(p => p.Description).HasMaxLength(200);
             entity.Property(p => p.IsDeleted).HasDefaultValue(false);

@@ -5,9 +5,9 @@ namespace ASP_Project.Areas.Identity.Data.Models
 {
     public enum Gender
     {
-        Man,
-        Woman,
-        Unisex
+        Man = 0,
+        Woman = 1,
+        Unisex = 2
     }
 
     public class Product
@@ -16,7 +16,7 @@ namespace ASP_Project.Areas.Identity.Data.Models
         
         public string Name { get; set; }
         public string Make { get; set; }
-        public Gender Gender { get; set; }
+        //public Gender Gender { get; set; }
         public string Fabric { get; set; }
         public string Description { get; set; }
         public bool IsDeleted { get; set; }
