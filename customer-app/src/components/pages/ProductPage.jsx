@@ -6,28 +6,40 @@ import { useParams } from "react-router-dom";
 import { getProductById } from "../../store/reducer";
 import { useDispatch, useSelector } from "react-redux";
 
-
 export default function ProductPage() {
   let dispatch = useDispatch();
   let product = useSelector((state) => state.products.selectedProductsArr);
 
   let { productId, productVariationId } = useParams();
-  let productVariation;
-  let [mainImage, setMainImage] = useState(0);
   
+  let productVariation;
+  let [productVariationTest, setProductVariationTest] = useState({});
+  let [mainImage, setMainImage] = useState(0);
+
   useEffect(() => {
     dispatch(getProductById(productId));
   }, [dispatch]);
-
+  
   if (product && product.productVariations) {
     productVariation = product.productVariations.find(
       (v) => v.id === parseInt(productVariationId, 10)
-    );
-  }
-
-  const handleImageClick = (index) => {
+      );
+      console.log(productVariation)
+    }
+    
+  const handleImageClick = async (index) => {
     setMainImage(index);
   };
+
+  const handleSizeChange = async (e) => {
+    const selectedSize = e.target.value;
+    const productVariation = product.productVariations.find((v) => v.size === selectedSize);
+    productVariationId = productVariation.id;
+    setProductVariationTest(productVariation);  
+    console.log(productVariationTest)
+  };
+  console.log(productVariation)
+  console.log(productVariationId)
 
   return (
     <div className="product-page-container page-container">
@@ -46,29 +58,41 @@ export default function ProductPage() {
               {productVariation.productImages.map((image, index) => (
                 <div
                   key={index}
-                  className={`product-thumbnail ${index === mainImage ? "selected" : ""}`}
-                  onClick={() => handleImageClick(index)}>
-                  
+                  className={`product-thumbnail ${
+                    index === mainImage ? "selected" : ""
+                  }`}
+                  onClick={() => handleImageClick(index)}
+                >
                   <img
                     src={`data:image/jpeg;base64,${image.imageData}`}
                     alt={`Product Thumbnail ${index + 1}`}
-                    className="product-thumbnail-image"/>
+                    className="product-thumbnail-image"
+                  />
                 </div>
               ))}
             </div>
           </div>
 
-          <div>
-            <h3>{product.name}</h3>
-            <span>{productVariation.name}</span>
+          <div className="product-info-container">
+            <h2>{product.name}</h2>
+            <span>$ {productVariation.price}</span>
 
-            <ul>
-              <li>{product.name}</li>
-              <li>{product.make}</li>
-              <li>{product.description}</li>
-              <li>{product.gender}</li>
-              <li>{product.fabric}</li>
-            </ul>
+            <div className="size-selector">
+              <select value={productVariation.size} onChange={(e) => handleSizeChange(e)}>
+                {product.productVariations.map((variation) => (
+                  <option key={variation.id} value={variation.size}>
+                    {variation.size}
+                  </option>
+                ))}
+              </select>
+              <div className="arrow-down"></div>
+            </div>
+
+            <div className="product-info-buttons-container">
+              <div className="product-button-addToBag-container"></div>
+
+              <div className="product-button-addToFav-container"></div>
+            </div>
           </div>
         </div>
       )}

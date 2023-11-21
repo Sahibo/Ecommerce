@@ -20,76 +20,96 @@
 /* Product Page */
 
 .product-page-container {
-  /* Add styling for the page container if needed */
+  height: calc(100vh - 100px);
 }
 
 .product-container {
   display: flex;
-  align-items: center; /* Align items vertically in the center */
+  height: 100%;
 }
 
 .product-images-container {
   display: flex;
-  flex-direction: column; /* Images in a column */
-  align-items: flex-start; /* Align images to the left */
-
-  height: calc(100vh - 100px);
-  background-color: aqua;
+  align-items: center; 
+  height: 100%;
 }
 
 .product-main-image-container {
     height: 100%;
-    width: 100%;
-    max-height: 400px; /* Adjust this value as needed */
-
-    object-fit: contain;
+    object-fit: cover;
 }
 
 .product-main-image {
     height: 100%;
     width: 100%;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 .product-thumbnails-container {
-  /* margin: 10px; */
   display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+  height: 100%;
+  
 }
 
 .product-thumbnail {
-  /* Add styling for each thumbnail */
+  height: fit-content;
   cursor: pointer;
+  height: 200px;
 }
 
-.product-thumbnail.selected {
-  /* Add styling for the selected thumbnail */
+/* .product-thumbnail.selected {
   
-  object-fit: contain;
-}
+  object-fit: cover;
+} */
 
 .product-thumbnail-image {
-  /* Add styling for the thumbnail image */
-  width: 100%; /* Ensure the image doesn't exceed its container */
-  height: 250px; /* Maintain aspect ratio */
-
-  object-fit: contain;
+  object-fit: cover;
+  height: 200px; 
+  width: 100%;
 }
 
-.product-text-container {
-  margin-left: 20px; /* Add margin between images and text */
+.product-thumbnails-container::-webkit-scrollbar {
+  width: 3px;
 }
 
-.product-text-container h3,
-.product-text-container span,
-.product-text-container ul {
-  margin-bottom: 10px; /* Add spacing between text elements */
+
+/* ///////////// */
+
+.size-selector {
+  position: relative;
+  display: inline-block;
 }
 
-.product-text-container ul {
-  list-style-type: none; /* Remove default list styling */
-  padding: 0; /* Remove default list padding */
+select {
+  appearance: none;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  width: 150px;
+  cursor: pointer;
+  outline: none;
 }
 
-.product-text-container li {
-  margin-bottom: 5px; /* Add spacing between list items */
+select:focus {
+  border-color: #007bff;
 }
+
+.arrow-down {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Style the arrow-down icon */
+.arrow-down::before {
+  content: '▼';
+  font-size: 14px;
+  color: #333;
+}
+
+/* ///////////// */

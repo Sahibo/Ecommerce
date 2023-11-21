@@ -13,9 +13,7 @@ export default function HomePage() {
   
     const handleAllProductsClick = async (e) => {
       e.preventDefault();
-      console.log("Start");
       await dispatch(getAllProducts())
-      console.log("end");
       navigate(`Product`)
     };
   return (

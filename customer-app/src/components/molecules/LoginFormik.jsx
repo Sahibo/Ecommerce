@@ -15,7 +15,6 @@ export default function LoginFormik() {
   // localStorage.removeItem(keyToRemove);
   
   const navigate = useNavigate()
-
   
 
   const userToken = localStorage.getItem("accessToken")

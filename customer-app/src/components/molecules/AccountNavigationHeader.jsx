@@ -12,16 +12,10 @@ import { useDispatch, useSelector } from "react-redux";
  
 export default function AccountNavigationHeader() {
     const navigate = useNavigate()
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
-    console.log("AccountNavigationHeader")
-    console.log(isAuthenticated)
- 
+    const isAuthenticated = localStorage.getItem("isAuthenticated"); 
  
     const handleAccountNavigationClick = async (result, e) => {
         e.preventDefault();
-        
-        console.log("handleAccountNavigationClick")
-        console.log(isAuthenticated)
         navigate(`/User/${result}`)
     };
  
