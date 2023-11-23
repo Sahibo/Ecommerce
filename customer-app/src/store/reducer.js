@@ -150,14 +150,14 @@ export const loginUser = createAsyncThunk(
   async ({ email, password }, { getState, rejectWithValue }) => {
     try {
       let state = getState();
-      const url = `${state.user.base}/Login`;
+      let url = `${state.user.base}/Login`;
 
-      const requestBody = {
+      let requestBody = {
         email,
         password,
       };
 
-      const response = await fetch(url, {
+      let response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -169,7 +169,7 @@ export const loginUser = createAsyncThunk(
         throw new Error("Failed to log in");
       }
 
-      const data = await response.json();
+      let data = await response.json();
 
       return data;
     } catch (error) {
@@ -182,14 +182,17 @@ export const loginUser = createAsyncThunk(
 export const addToFavorites = createAsyncThunk(
   "User/AddFavorites",
   async (id, { getState }) => {
-    const state = getState();
-    const url = `${state.user.base}/AddFavorite/${state.user.userId}/${id}`;
-    const response = await fetch(url, { method: "POST" });
+    let state = getState();
+    let userId = localStorage.getItem("userId");
+
+    let url = `${state.user.base}/AddFavorite/${userId}/${id}`;
+    let response = await fetch(url, { method: "POST" });
+
     if (!response.ok) {
       throw new Error("Failed to add favorite");
     }
-    const data = await response.json();
-    console.log(data);
+
+    let data = await response.json();
     return data;
   }
 );
@@ -197,14 +200,16 @@ export const addToFavorites = createAsyncThunk(
 export const deleteFromFavorites = createAsyncThunk(
   "User/DeleteFavorites",
   async (id, { getState }) => {
-    const state = getState();
-    const url = `${state.user.base}/DeleteFavorite/${state.user.userId}/${id}`;
-    const response = await fetch(url, { method: "POST" });
+    let state = getState();
+    let userId = localStorage.getItem("userId");
+
+    let url = `${state.user.base}/DeleteFavorite/${userId}/${id}`;
+    let response = await fetch(url, { method: "POST" });
     if (!response.ok) {
       throw new Error("Failed to delete favorite");
     }
-    const data = await response.json();
-    console.log(data);
+    let data = await response.json();
+    
     return data;
   }
 );
@@ -221,7 +226,7 @@ export const showFavorites = createAsyncThunk(
       throw new Error("Failed to add favorite");
     }
     const data = await response.json();
-    console.log(data);
+    //console.log(data);
     return data;
   }
 );

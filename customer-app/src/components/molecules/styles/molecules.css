@@ -130,6 +130,10 @@
     background-image: url('../../../icons/like_hover_icon.svg');
 }
 
+.filled {
+    background-image: url('../../../icons/like_filled_icon.svg');
+}
+
 
 /* Auth Form Header */
 

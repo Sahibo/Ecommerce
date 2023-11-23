@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 function App() {
 
   const isAuthenticated = localStorage.getItem("isAuthenticated");
-console.log(isAuthenticated);
+  
   // const keyToRemove = 'isAuthenticated';
   // localStorage.removeItem(keyToRemove);
 

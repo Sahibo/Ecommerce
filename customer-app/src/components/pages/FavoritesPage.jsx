@@ -9,7 +9,7 @@ import { showFavorites } from "../../store/reducer";
 export default function FavoritesPage() {
     let dispatch = useDispatch()
     const favorites = useSelector((state) => state.user.favorites);
-
+    console.log(favorites)
 
     useEffect(() => {
         dispatch(showFavorites())
