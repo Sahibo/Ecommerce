@@ -7,32 +7,33 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.RegularExpressions;
-
+ 
 namespace EcommerceAPI.Controllers
 {
     [ApiController]
     [Route("User")]
     public class UserController : ControllerBase
     {
-
+ 
         // prover rabotaet li bez nix
         public class UserModel
         {
             public string Email { get; set; }
             public string Password { get; set; }
         }
-
+ 
         public class UserLoginModel : UserModel
         {
             public bool RememberMe { get; set; } = true;
         }
-
+ 
+ 
         private readonly EcommerceContext _dbContext;
         private readonly UserManager<AspNetUser> _userManager;
         private readonly IUserStore<AspNetUser> _userStore;
         private readonly IConfiguration _configuration;
         private readonly SignInManager<AspNetUser> _signInManager;
-
+ 
         // role manager add 
         public UserController(EcommerceContext dbContext,
             UserManager<AspNetUser> userManager,
@@ -45,9 +46,9 @@ namespace EcommerceAPI.Controllers
             _userStore = userStore;
             _signInManager = signInManager;
             _configuration = configuration;
-
+ 
         }
-
+ 
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] UserLoginModel model)
         {
@@ -60,17 +61,16 @@ namespace EcommerceAPI.Controllers
                     if (result.Succeeded)
                     {
                         var tokenString = GenerateTokenString(user);
-                        return Ok(tokenString);
+                        return Ok(new {UserId = user.Id, Token = tokenString});
                     }
                     return BadRequest("Invalid login attempt");
                 }
             }
             return BadRequest("Not valid attempt");
-
+ 
         }
-
-
-
+ 
+ 
         [HttpPost("Registration")]
         public async Task<IActionResult> Registration([FromBody] UserModel model)
         {
@@ -85,20 +85,20 @@ namespace EcommerceAPI.Controllers
                             Email = model.Email,
                             NormalizedEmail = model.Email.ToUpper()
                         };
-
+ 
                         await _userStore.SetUserNameAsync(newUser, model.Email, CancellationToken.None);
                         await _userManager.GetUserIdAsync(newUser);
-
+ 
                         var result = await _userManager.CreateAsync(newUser, model.Password);
-
-
+ 
+ 
                         if (result.Succeeded)
                         {
                             var tokenString = GenerateTokenString(newUser);
-                            return Ok(tokenString);
+                            return Ok(new { UserId = newUser.Id, Token = tokenString });
                         }
                         return BadRequest("Registration failed");
-
+ 
                     }
                     return BadRequest("Email is invalid or already taken");
                 }
@@ -106,28 +106,95 @@ namespace EcommerceAPI.Controllers
             }
             return BadRequest("Email is not in correct format");
         }
-
+ 
         private string GenerateTokenString(AspNetUser user)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email,user.UserName),
+                new Claim(ClaimTypes.NameIdentifier,user.Id),
                 new Claim(ClaimTypes.Role,"User"),
             };
-
+ 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value));
-
+ 
             var signingCred = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
-
+ 
             var securityToken = new JwtSecurityToken(
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(60),
                 issuer: _configuration.GetSection("Jwt:Issuer").Value,
                 audience: _configuration.GetSection("Jwt:Audience").Value,
                 signingCredentials: signingCred);
-
+ 
             string tokenString = new JwtSecurityTokenHandler().WriteToken(securityToken);
             return tokenString;
+        }
+ 
+        [HttpPost("AddFavorite/{userId}/{productId}")]
+        public async Task<IActionResult> AddFavById(string userId, int productId)
+        {
+            var user = await _dbContext.AspNetUsers.FindAsync(userId);
+ 
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+ 
+            //var existingFavorite = await _dbContext.Favorites
+            //    .FirstOrDefaultAsync(f => f.UserId == user.Id && f.ProductVariationId == productId);
+ 
+ 
+            var newFavorite = new Favorite
+            {
+                UserId = user.Id,
+                ProductVariationId = productId
+            };
+ 
+            _dbContext.Favorites.Add(newFavorite);
+            await _dbContext.SaveChangesAsync();
+            return Ok("Favorite added successfully");
+        }
+ 
+        [HttpPost("DeleteFavorite/{userId}/{productId}")]
+        public async Task<IActionResult> DeleteFavById(string userId, int productId)
+        {
+            var user = await _dbContext.AspNetUsers.FindAsync(Convert.ToString(userId));
+ 
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+ 
+            var favoriteToDelete = await _dbContext.Favorites
+                .FirstOrDefaultAsync(f => f.UserId == user.Id && f.ProductVariationId == productId);
+ 
+            if (favoriteToDelete == null)
+            {
+                return NotFound("Favorite not found");
+            }
+ 
+            _dbContext.Favorites.Remove(favoriteToDelete);
+            await _dbContext.SaveChangesAsync();
+ 
+            return Ok("Favorite deleted successfully");
+        }
+ 
+        [HttpPost("ShowFavorites/{userId}")]
+ 
+        public async Task<IActionResult> ShowFavorites(string userId)
+        {
+            var user = await _dbContext.AspNetUsers
+                .Include(u => u.Favorites)
+                .FirstOrDefaultAsync(u => u.Id == Convert.ToString(userId));
+ 
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+ 
+            var favorites = user.Favorites;
+            return Ok(favorites); 
         }
     }
 }
