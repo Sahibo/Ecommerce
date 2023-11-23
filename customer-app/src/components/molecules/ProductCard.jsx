@@ -20,21 +20,17 @@ export default function ProductCard({ product, productVariation }) {
     navigate(`/Product/${productId}/ProductVariation/${productVariationId}`);
   };
 
-  let isFavorite = false;
+  let isFavorite = favorites.find(fav => fav.productVariationId === productVariation.id) !== undefined;
 
-  for (let i = 0; i < favorites.length; i++) {
-    if (favorites[i].productVariationId === productVariation.id) {
-      isFavorite = true;
-      break;
+  const handleAddToFavClick = (e, id) => {
+    e.preventDefault();
+  
+    if (!isFavorite) {
+      dispatch(addToFavorites(id));
+    } else {
+      dispatch(deleteFromFavorites(id));
     }
-  }
-
-  const handleAddToFavClick = (e, id) =>
-  {
-    e.preventDefault()
-    dispatch(addToFavorites(id))
-    // dispatch(deleteFromFavorites(id))
-  }
+  };
 
   useEffect(() => {
     if (!isFavorite) {

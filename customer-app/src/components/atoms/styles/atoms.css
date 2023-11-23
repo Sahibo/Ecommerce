@@ -61,18 +61,18 @@
   cursor: pointer;
 }
 
+.form-header-button-container.off {
+  background-color: #ddd;
+}
+
 .form-header-button-container:first-child {
   margin-right: 5px;
-  border-right: 1px #ddd solid;
-  
-  /* background-color: #ddd; */
+  border-right: 1px #ddd solid;  
 }
 
 .form-header-button-container:last-child {
   margin-left: 5px;
   border-left: 1px #ddd solid;
-
-  background-color: #ddd;
 }
 
 .form-header-button-container span {
@@ -80,6 +80,7 @@
   font-weight: 500;
   
   align-self: center;
+  
 }
 
 

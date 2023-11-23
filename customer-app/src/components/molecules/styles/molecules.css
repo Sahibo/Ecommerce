@@ -124,6 +124,7 @@
     background-image: url('../../../icons/like_icon.svg');
     background-size: cover;
     transition: background-image 0.3s;
+    cursor: pointer;
 }
 
 .favIcon:hover {
