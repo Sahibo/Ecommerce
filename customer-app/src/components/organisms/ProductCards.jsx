@@ -24,9 +24,7 @@ export default function ProductCards() {
       {products.map((product, index) =>
         product.productVariations.map((productVariation, variationIndex) => (
           <React.Fragment key={variationIndex}>
-            <Link onClick={(e) => handleProductClick(product.id, productVariation.id, e)}>
-              <ProductCard product={product} productVariation={productVariation} />
-            </Link>
+            <ProductCard product={product} productVariation={productVariation} />
           </React.Fragment>
         ))
       )}

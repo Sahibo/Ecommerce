@@ -6,13 +6,15 @@ import HomePage from "./components/pages/HomePage";
 import CatalogPage from "./components/pages/CatalogPage";
 import ProductPage from "./components/pages/ProductPage";
 import AccountPage from "./components/pages/AccountPage";
+import FavoritesPage from "./components/pages/FavoritesPage";
 import Header from "./components/organisms/Header";
 import Footer from "./components/organisms/Footer";
 import { useSelector } from "react-redux";
 
 function App() {
-  const isAuthenticated = localStorage.getItem("isAuthenticated");
 
+  const isAuthenticated = localStorage.getItem("isAuthenticated");
+console.log(isAuthenticated);
   // const keyToRemove = 'isAuthenticated';
   // localStorage.removeItem(keyToRemove);
 
@@ -34,6 +36,7 @@ function App() {
           ) : (
             <Route path="/User/Auth" element={<AccountPage />} />
           )}
+          <Route path="/User/Favorites" element={<FavoritesPage />} />
 
           <Route path="/Product" element={<CatalogPage />} />
           <Route path="/Product/Gender/:gender" element={<CatalogPage />} />

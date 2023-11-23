@@ -12,10 +12,16 @@ import { useDispatch, useSelector } from "react-redux";
  
 export default function AccountNavigationHeader() {
     const navigate = useNavigate()
-    const isAuthenticated = localStorage.getItem("isAuthenticated"); 
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    console.log("AccountNavigationHeader")
+    console.log(isAuthenticated)
+ 
  
     const handleAccountNavigationClick = async (result, e) => {
         e.preventDefault();
+       
+        console.log("handleAccountNavigationClick")
+        console.log(isAuthenticated)
         navigate(`/User/${result}`)
     };
  
@@ -28,7 +34,7 @@ export default function AccountNavigationHeader() {
                     </Link>
                 </li>
                 <li className='account-item item'>
-                    <Link onClick={(e) => handleAccountNavigationClick('FavItems', e)}>
+                    <Link onClick={(e) => handleAccountNavigationClick('Favorites', e)}>
                         <img src={FavIcon} className="icon" alt="Icon" />
                     </Link>
                 </li>

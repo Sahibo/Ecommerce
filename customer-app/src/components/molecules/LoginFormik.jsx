@@ -40,8 +40,10 @@ export default function LoginFormik() {
     
     if (userToken != null) {
       navigate('/');
-
+      console.log("DONE")
     }
+    console.log("not")
+
   };
  
  

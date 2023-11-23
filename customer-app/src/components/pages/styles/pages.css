@@ -77,39 +77,24 @@
 
 /* ///////////// */
 
-.size-selector {
+.size-selector-container {
   position: relative;
   display: inline-block;
 }
 
-select {
-  appearance: none;
+.size-selector {
   padding: 10px;
   font-size: 16px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  width: 150px;
+  border: none;
+  border-top: 1px solid #223843;
+  border-bottom: 1px solid #223843;
+  background-color: transparent;
+  width: 250px;
+  height: 40px;
   cursor: pointer;
   outline: none;
 }
 
-select:focus {
-  border-color: #007bff;
-}
 
-.arrow-down {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-/* Style the arrow-down icon */
-.arrow-down::before {
-  content: '▼';
-  font-size: 14px;
-  color: #333;
-}
-
+ 
 /* ///////////// */
