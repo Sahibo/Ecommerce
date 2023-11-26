@@ -6,6 +6,7 @@ import HomePage from "./components/pages/HomePage";
 import CatalogPage from "./components/pages/CatalogPage";
 import ProductPage from "./components/pages/ProductPage";
 import AccountPage from "./components/pages/AccountPage";
+import BagPage from "./components/pages/BagPage";
 import FavoritesPage from "./components/pages/FavoritesPage";
 import Header from "./components/organisms/Header";
 import Footer from "./components/organisms/Footer";
@@ -37,7 +38,7 @@ function App() {
             <Route path="/User/Auth" element={<AccountPage />} />
           )}
           <Route path="/User/Favorites" element={<FavoritesPage />} />
-
+          <Route path="/User/Bag" element={<BagPage />} />
           <Route path="/Product" element={<CatalogPage />} />
           <Route path="/Product/Gender/:gender" element={<CatalogPage />} />
           <Route path="/Product/Category/:id" element={<CatalogPage />} />

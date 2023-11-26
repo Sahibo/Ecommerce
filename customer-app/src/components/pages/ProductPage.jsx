@@ -3,10 +3,11 @@ import "./styles/pages.css";
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProductById } from "../../store/reducer";
+import { getProductById, addToBag } from "../../store/reducer";
 import { useDispatch, useSelector } from "react-redux";
 
 import SizeSelectorProduct from "../molecules/SizeSelectorProduct"
+import ColorSelectorProdut from "../molecules/ColorSelectorProdut"
 
 export default function ProductPage() {
   let dispatch = useDispatch();
@@ -16,13 +17,19 @@ export default function ProductPage() {
   let { productId, productVariationId } = useParams();
   let selectedVariation;
 
-  let [productVariations, setProductVariations] = useState([]);
-  
+  let [productSizeVariations, setProductSizeVariations] = useState([]);
+  let [productColorVariations, setProductColorVariations] = useState([]);
+
   let [mainImage, setMainImage] = useState(0);
 
   useEffect(() => {
     dispatch(getProductById(productId));
   }, [dispatch, productId, productVariationId]); 
+
+  const addItem = (id) =>
+  {
+    dispatch(addToBag(id))
+  }
 
   if (product && product.productVariations) {
     selectedVariation = product.productVariations.find(
@@ -31,18 +38,35 @@ export default function ProductPage() {
   }
 
   if (selectedVariation) {
-    productVariations = product.productVariations.filter((v) => v.color === selectedVariation.color);
+    productSizeVariations = product.productVariations.filter((v) => v.color === selectedVariation.color);
+    productColorVariations = product.productVariations.filter((v) => v.productId === selectedVariation.productId);
+
   } else {
-    // Handle the case where selectedVariation is not available
-    productVariations = [];
+    productSizeVariations = [];
+    productColorVariations = [];
   }
-  // console.log(productVariations);
-  // productVariations = product.productVariations.filter((v) => v.color === selectedVariation.color);
-  // console.log(productVariations);
+  
+  if (product.productVariations && Array.isArray(product.productVariations)) {
+    productColorVariations = product.productVariations.reduce((result, currentObject, index, array) => {
+        const isUniqueColor = array.slice(0, index).every(obj => obj.color !== currentObject.color);
+
+        if (isUniqueColor || index === 0) {
+            result.push(currentObject);
+        }
+
+        return result;
+    }, []);
+  } else {
+      // Handle the case when product.productVariations is not defined or not an array
+      console.error("product.productVariations is not defined or not an array");
+  }
+
+  console.log(productColorVariations);
+  //console.log(productColorVariations);
+  
   const handleImageClick = async (index) => {
     setMainImage(index);
   };
-
 
   return (
     <div className="product-page-container page-container">
@@ -52,9 +76,7 @@ export default function ProductPage() {
             <div className="product-main-image-container">
               <img
                 src={`data:image/jpeg;base64,${selectedVariation.productImages[mainImage].imageData}`}
-                alt={`Product Img`}
-                className="product-main-image"
-              />
+                alt={`Product Img`} className="product-main-image"/>
             </div>
 
             <div className="product-thumbnails-container">
@@ -70,15 +92,21 @@ export default function ProductPage() {
           </div>
 
           <div className="product-info-container">
-            <h2>{product.name}</h2>
-            <span>$ {selectedVariation.price}</span>
+            <h1>{product.make}: {product.name}</h1>
+            <h2>$ {selectedVariation.price}</h2>
 
-            <SizeSelectorProduct product={product} productVariations={productVariations} selectedVariation={selectedVariation}/>
+            <ColorSelectorProdut product={product} productColorVariations={productColorVariations} selectedVariation={selectedVariation}/>
+
+            <SizeSelectorProduct product={product} productSizeVariations={productSizeVariations} selectedVariation={selectedVariation}/>
 
             <div className="product-info-buttons-container">
-              <div className="product-button-addToBag-container"></div>
+              <div className="product-button-addToBag-container">
+                <button onClick={() => addItem(productVariationId)}>Add to bag</button>
+              </div>
 
-              <div className="product-button-addToFav-container"></div>
+              <div className="product-button-addToFav-container">
+                <button>Add to fav</button>
+              </div>
             </div>
           </div>
         </div>

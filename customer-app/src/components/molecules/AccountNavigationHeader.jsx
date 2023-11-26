@@ -39,7 +39,7 @@ export default function AccountNavigationHeader() {
                     </Link>
                 </li>
                 <li className='account-item item'>
-                    <Link onClick={(e) => handleAccountNavigationClick('ShopCard', e)}>
+                    <Link onClick={(e) => handleAccountNavigationClick('Bag', e)}>
                         <img src={BagIcon} className="icon" alt="Icon" />
                     </Link>
                 </li>

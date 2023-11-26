@@ -94,7 +94,14 @@
   cursor: pointer;
   outline: none;
 }
-
-
  
 /* ///////////// */
+
+.product-info-buttons-container {
+  display: flex;
+}
+
+.product-info-container {
+  width: 100%;
+  padding: 0 50px;
+}

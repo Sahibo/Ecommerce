@@ -231,6 +231,61 @@ export const showFavorites = createAsyncThunk(
   }
 );
 
+///  Bag  ///
+export const addToBag = createAsyncThunk(
+  "User/AddFavorites",
+  async (id, { getState, rejectWithValue }) => {
+    try {
+      const state = getState();
+      let userId = localStorage.getItem("userId");
+      const url = `${state.bag.shoppingCartItemUrl}/AddToCart/${userId}/${id}`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+ 
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(`Failed to add shopping cart item. Status: ${response.status}. Message: ${errorMessage}`);
+      }
+ 
+      const data = await response.text();
+      console.log(data);
+      return data;
+    } catch (error) {
+      return rejectWithValue({ errorMessage: error.message, status: error.status });
+    }
+  }
+);
+ 
+export const getAllItems = createAsyncThunk(
+  "ShoppingCart/GetAllItems",
+  async (_, { getState }) => {
+    const state = getState();
+    let userId = localStorage.getItem('userId')
+ 
+    const url = `${state.bag.shoppingCartUrl}/GetAllItems/${userId}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+ 
+    if (!response.ok) {
+      throw new Error("Failed to get all shopping cart items");
+    }
+    const data = await response.json();
+ 
+    console.log(data);
+    return data;
+  }
+);
+
+
+
 const productsSlice = createSlice({
   name: "products",
   initialState: {
@@ -369,6 +424,44 @@ const userSlice = createSlice({
   },
 });
 
+const bagSlice = createSlice({
+  name: "bag",
+  initialState: {
+    items: [],
+    isLoading: false,
+    error: null,
+    message: '',
+    shoppingCartUrl: "https://localhost:44313/ShoppingCart",
+    shoppingCartItemUrl: "https://localhost:44313/ShoppingCartItem",
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(getAllItems.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllItems.fulfilled, (state, action) => {
+        console.log('fulfilled');
+        state.items = action.payload
+      })
+      .addCase(getAllItems.rejected, (state, action) => {
+ 
+        console.log('rejected');
+      })
+      .addCase(addToBag.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addToBag.fulfilled, (state, action) => {
+        console.log('fulfilled');
+        state.userBag = action.payload
+      })
+      .addCase(addToBag.rejected, (state, action) => {
+ 
+        console.log('rejected');
+      })
+  },
+});
+
 const parentCategoriesSlice = createSlice({
   name: "parentCategories",
   initialState: {
@@ -404,7 +497,7 @@ const parentCategoriesSlice = createSlice({
   },
 });
 
-export { productsSlice, userSlice, parentCategoriesSlice };
+export { productsSlice, userSlice, parentCategoriesSlice, bagSlice };
 
 export const { clearCategories } = parentCategoriesSlice.actions;
 export const { logoutUser } = userSlice.actions;
