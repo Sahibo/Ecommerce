@@ -14,6 +14,8 @@ export default function ColorSelectorProduct(props) {
     );
   };
 
+  console.log(props.selectedVariation.size);
+
   return (
     <div className="color-selector-container">
       <div className="selector-label-container">
@@ -27,11 +29,9 @@ export default function ColorSelectorProduct(props) {
             onClick={() => handleColorChange(variation.color, variation.id)}
             src={`data:image/jpeg;base64,${variation.productImages[0].imageData}`}
             alt={`Product Img`}
-            className={`product-select-image ${
-              variation === props.selectedVariation ? "selected-image-item" : ""
-            }`}
-          />
-        ))}
+            className={`product-select-image 
+              ${variation === props.selectedVariation ? "selected-image-item" : ""}`}/>
+          ))}
       </div>
     </div>
   );

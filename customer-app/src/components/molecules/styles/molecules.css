@@ -197,11 +197,58 @@ label {
 
 /*/// COLOR SELECTOR ///*/
 
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+
+    height: 40px;
+}
+
+.dropdown-options {
+    position: absolute;
+    background-color: #eff1f3;
+    width: 100%;
+    max-height: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    overflow-x: auto;
+}
+
+.selected-header, 
+.size-selector-option {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 40px;
+    padding: 0 15px;
+    
+}
+
+.selected-header:hover,
+.size-selector-option:hover {
+    background-color: #d7d7d8;
+}
+
+.custom-dropdown {
+    border-top: #888 1px solid;
+    border-bottom: #888 1px solid;
+    min-height: 35px;
+    display: flex;
+    flex-direction: column;   
+}
+
+.custom-dropdown span{
+    cursor: pointer;
+}
+
+/* SIZE + COLOR */
 .size-selector-container, 
 .color-selector-container {
     margin-bottom: 20px;
+    width: 100%;
 }
 
+/* COLOR */
 .color-selector-container {
     display: flex;
     flex-direction: column;
@@ -212,8 +259,8 @@ label {
 
 .selector-label-container {
     font-weight: 500;
-    color:  #888;
-    border-bottom: #888 1px solid;
+    color: #888;
+    margin-top: 15px;
 }
 
 .color-selector-images-container {
@@ -224,7 +271,9 @@ label {
     height: 120px;
     margin-top: 5px;
     margin-right: auto;
-    
+    padding: 5px 0;
+    border-top: #888 1px solid;
+    border-bottom: #888 1px solid;
 }
 
 .product-select-image {
