@@ -1,5 +1,6 @@
 using EcommerceAPI;
-using EcommerceAPI.DbContexts;
+using EcommerceDb.Models;
+using EcommerceDb.DbContexts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -40,7 +41,10 @@ builder.Services.AddAuthentication(options =>
 
     };
 });
-
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+	options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+});
 
 var app = builder.Build();
 

@@ -1,7 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using EcommerceAPI.DbContexts;
+using EcommerceDb.DbContexts;
+using EcommerceDb.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,7 @@ namespace EcommerceAPI.Controllers
         public UserController(EcommerceContext dbContext,
             UserManager<AspNetUser> userManager,
             IUserStore<AspNetUser> userStore,
-            SignInManager<AspNetUser> signInManager, 
+            SignInManager<AspNetUser> signInManager,
             IConfiguration configuration)
         {
             _dbContext = dbContext;
@@ -61,7 +62,7 @@ namespace EcommerceAPI.Controllers
                     if (result.Succeeded)
                     {
                         var tokenString = GenerateTokenString(user);
-                        return Ok(new {UserId = user.Id, Token = tokenString});
+                        return Ok(new { UserId = user.Id, Token = tokenString });
                     }
                     return BadRequest("Invalid login attempt");
                 }
@@ -94,7 +95,10 @@ namespace EcommerceAPI.Controllers
  
                         if (result.Succeeded)
                         {
+                            await CreateUserShoppingCart(newUser.Id);
                             var tokenString = GenerateTokenString(newUser);
+                            await _dbContext.SaveChangesAsync();
+ 
                             return Ok(new { UserId = newUser.Id, Token = tokenString });
                         }
                         return BadRequest("Registration failed");
@@ -106,6 +110,18 @@ namespace EcommerceAPI.Controllers
             }
             return BadRequest("Email is not in correct format");
         }
+ 
+        [HttpPost("CreateUserShoppingCart/{userId}")]
+        public async Task<IActionResult> CreateUserShoppingCart(string userId)
+        {
+            var userShoppingCart = new ShoppingCart
+            {
+                UserId = userId,
+            };
+            await _dbContext.ShoppingCarts.AddAsync(userShoppingCart);
+            return Ok("Shopping cart created successfully");
+        }
+ 
  
         private string GenerateTokenString(AspNetUser user)
         {
@@ -148,7 +164,7 @@ namespace EcommerceAPI.Controllers
             var newFavorite = new Favorite
             {
                 UserId = user.Id,
-                ProductVariationId = productId
+                SubProductVariationId = productId
             };
  
             _dbContext.Favorites.Add(newFavorite);
@@ -167,7 +183,7 @@ namespace EcommerceAPI.Controllers
             }
  
             var favoriteToDelete = await _dbContext.Favorites
-                .FirstOrDefaultAsync(f => f.UserId == user.Id && f.ProductVariationId == productId);
+                .FirstOrDefaultAsync(f => f.UserId == user.Id && f.SubProductVariationId == productId);
  
             if (favoriteToDelete == null)
             {
@@ -194,7 +210,7 @@ namespace EcommerceAPI.Controllers
             }
  
             var favorites = user.Favorites;
-            return Ok(favorites); 
+            return Ok(favorites);
         }
     }
 }
