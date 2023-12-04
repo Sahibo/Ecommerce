@@ -1,20 +1,18 @@
 import "../../global.css";
 import "./styles/molecules.css";
+import { useSelector, useDispatch } from 'react-redux';
 
 import { useNavigate } from "react-router-dom";
 
-export default function ColorSelectorProduct(props) {
+export default function ColorSelectorProduct() {
   let navigate = useNavigate();
+  let dispatch = useDispatch()
+  let selectedProduct = useSelector((state) => state.products.selectedProduct);
+  let selectedVariation = useSelector((state) => state.products.selectedVariation);
 
-  const handleColorChange = async (selectedColor, productVariationId) => {
-    console.log(selectedColor);
-
-    navigate(
-      `/Product/${props.product.id}/ProductVariation/${productVariationId}`
-    );
+  let handleColorChange = async (selectedColor, productVariationId) => {
+    navigate(`/Product/${selectedProduct.id}/ProductVariation/${productVariationId}`);
   };
-
-  console.log(props.selectedVariation.size);
 
   return (
     <div className="color-selector-container">
@@ -23,14 +21,14 @@ export default function ColorSelectorProduct(props) {
       </div>
 
       <div className="color-selector-images-container">
-        {props.productColorVariations.map((variation) => (
+        {selectedProduct?.productVariations?.map((variation) => (
           <img
             key={variation.id}
             onClick={() => handleColorChange(variation.color, variation.id)}
             src={`data:image/jpeg;base64,${variation.productImages[0].imageData}`}
             alt={`Product Img`}
             className={`product-select-image 
-              ${variation === props.selectedVariation ? "selected-image-item" : ""}`}/>
+              ${variation === selectedVariation ? "selected-image-item" : ""}`}/>
           ))}
       </div>
     </div>

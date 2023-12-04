@@ -1,26 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-export const getAllProducts = createAsyncThunk(
-  "Product",
-  async (_, { getState }) => {
-    const state = getState();
-    const url = `${state.products.base}`;
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error("Failed to fetch products by gender");
-    }
-    const data = await response.json();
-    console.log(data);
-    return data;
-  }
-);
-
 export const getParentCategoriesByGender = createAsyncThunk(
   "ParentCategory/Gender/:gender",
   async (gender, { getState }) => {
     const state = getState();
     const url = `${state.parentCategories.base}/Gender/${gender}`;
     const response = await fetch(url);
+    console.log(url);
+
     if (!response.ok) {
       throw new Error("Failed to fetch parent categories");
     }
@@ -66,9 +53,23 @@ export const getProductsByCategoryId = createAsyncThunk(
       }
     }
 
-    console.log(response);
     const data = await response.json();
-    console.log(data);
+    return data;
+  }
+);
+
+// Products //
+
+export const getAllProducts = createAsyncThunk(
+  "Product",
+  async (_, { getState }) => {
+    const state = getState();
+    const url = `${state.products.base}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Failed to fetch products by gender");
+    }
+    const data = await response.json();
     return data;
   }
 );
@@ -88,7 +89,6 @@ export const getProductByGender = createAsyncThunk(
       }
     }
     const data = await response.json();
-    console.log(data);
     return data;
   }
 );
@@ -109,7 +109,120 @@ export const getProductById = createAsyncThunk(
   }
 );
 
+export const setFavProducts = createAsyncThunk(
+  "Favorites/Set",
+  async (_, { getState }) => {
+    const state = getState();
+    let tempProducts = state.products.productsArr;
+    let favorites = state.products.favorites;
+
+    const updatedVariationsArray = tempProducts.flatMap((product) => {
+      const updatedVariations = product.productVariations.map(
+        (productVariation) => {
+          const isFavorite = favorites.some(
+            (fav) => fav.productVariationId === productVariation.id
+          );
+          return { ...productVariation, isFavorite };
+        }
+      );
+      return updatedVariations;
+    });
+
+    const updatedProducts = tempProducts.map((product) => {
+      const updatedVariationsForProduct = updatedVariationsArray.filter(
+        (productVariation) => product.id === productVariation.productId
+      );
+      return { ...product, productVariations: updatedVariationsForProduct };
+    });
+
+    return updatedProducts;
+  }
+); // not done
+
+export const filterByAsc = createAsyncThunk(
+  "Products/FilterByAsc",
+  async (_, { getState }) => {
+    const state = getState();
+    let products = state.products.productsArr;
+    const temp = products.flatMap((product) => {
+      let updatedVariations = product.productVariations.map(
+        (productVariation) => {
+          let subProductVariations = productVariation.subProductVariations;
+
+          let filteredSubVariations = [...subProductVariations].sort(
+            (a, b) => a.totalPrice - b.totalPrice
+          );
+
+          return {
+            ...productVariation,
+            subProductVariations: filteredSubVariations,
+          };
+        }
+      );
+      return updatedVariations;
+    });
+
+    const updatedProducts = products.map((product) => {
+      const updatedVariationsForProduct = temp.filter(
+        (productVariation) => product.id === productVariation.productId
+      );
+      return { ...product, productVariations: updatedVariationsForProduct };
+    });
+
+    return updatedProducts;
+  }
+);
+
+export const filterByDesc = createAsyncThunk(
+  "Products/FilterByDesc",
+  async (_, { getState }) => {
+    const state = getState();
+    let products = state.products.productsArr;
+    const temp = products.flatMap((product) => {
+      let updatedVariations = product.productVariations.map(
+        (productVariation) => {
+          let subProductVariations = productVariation.subProductVariations;
+
+          let filteredSubVariations = [...subProductVariations].sort(
+            (a, b) => b.totalPrice - a.totalPrice
+          );
+
+          return {
+            ...productVariation,
+            subProductVariations: filteredSubVariations,
+          };
+        }
+      );
+      return updatedVariations;
+    });
+
+    const updatedProducts = products.map((product) => {
+      const updatedVariationsForProduct = temp.filter(
+        (productVariation) => product.id === productVariation.productId
+      );
+      return { ...product, productVariations: updatedVariationsForProduct };
+    });
+
+    return updatedProducts;
+  }
+);
 ///  USER  ///
+
+export const setProductsArr = createAsyncThunk(
+  "Products/SetProductsArr",
+  async (_, { getState }) => {
+    let state = getState();
+    let rawProductsArr = state.products.rawProductsArr;
+    console.log(rawProductsArr)
+    let flattenedProducts = rawProductsArr.flatMap((productGroup) =>
+      Object.values(productGroup).flatMap((variations) =>
+        variations.map((variation) => ({ [variations[0].name]: variation }))
+      )
+    );
+    console.log(flattenedProducts)
+    return flattenedProducts;
+  }
+);
 
 export const registerUser = createAsyncThunk(
   "User/Registration",
@@ -195,7 +308,7 @@ export const addToFavorites = createAsyncThunk(
     let data = await response.json();
     return data;
   }
-);
+); // not done
 
 export const deleteFromFavorites = createAsyncThunk(
   "User/DeleteFavorites",
@@ -209,13 +322,13 @@ export const deleteFromFavorites = createAsyncThunk(
       throw new Error("Failed to delete favorite");
     }
     let data = await response.json();
-    
+
     return data;
   }
-);
+); // not done
 
-export const showFavorites = createAsyncThunk(
-  "User/AddFavorites",
+export const getFavorites = createAsyncThunk(
+  "User/GetFavorites",
   async (_, { getState }) => {
     const state = getState();
     let userId = localStorage.getItem("userId");
@@ -229,7 +342,7 @@ export const showFavorites = createAsyncThunk(
     //console.log(data);
     return data;
   }
-);
+); // not done
 
 ///  Bag  ///
 export const addToBag = createAsyncThunk(
@@ -240,70 +353,91 @@ export const addToBag = createAsyncThunk(
       let userId = localStorage.getItem("userId");
       const url = `${state.bag.shoppingCartItemUrl}/AddToCart/${userId}/${id}`;
       const response = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
- 
+
       if (!response.ok) {
         const errorMessage = await response.text();
-        throw new Error(`Failed to add shopping cart item. Status: ${response.status}. Message: ${errorMessage}`);
+        throw new Error(
+          `Failed to add shopping cart item. Status: ${response.status}. Message: ${errorMessage}`
+        );
       }
- 
+
       const data = await response.text();
       console.log(data);
       return data;
     } catch (error) {
-      return rejectWithValue({ errorMessage: error.message, status: error.status });
+      return rejectWithValue({
+        errorMessage: error.message,
+        status: error.status,
+      });
     }
   }
-);
- 
+); // not done
+
 export const getAllItems = createAsyncThunk(
   "ShoppingCart/GetAllItems",
   async (_, { getState }) => {
     const state = getState();
-    let userId = localStorage.getItem('userId')
- 
+    let userId = localStorage.getItem("userId");
+
     const url = `${state.bag.shoppingCartUrl}/GetAllItems/${userId}`;
     const response = await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
- 
+
     if (!response.ok) {
       throw new Error("Failed to get all shopping cart items");
     }
     const data = await response.json();
- 
+
     console.log(data);
     return data;
   }
-);
-
-
+); // not done
 
 const productsSlice = createSlice({
   name: "products",
   initialState: {
+    rawProductsArr: [],
     productsArr: [],
     selectedProduct: {},
+    selectedSubVariation: {},
+    selectedVariation: {},
+    favorites: [],
+    favoritesProductsArr: [],
     isLoading: false,
     error: null,
     base: "https://localhost:44313/Product",
   },
-  reducers: {},
+  reducers: {
+    setSelectedSubVariation: (state, action) => {
+      let subVariation = action.payload;
+      return { ...state, selectedSubVariation: subVariation };
+    },
+    newSetSelectedVariation: (state, action) => {
+      let variation = action.payload;
+      console.log("newSetSelectedVariation");
+      return { ...state, selectedVariation: variation };
+    },
+    resetFilter: (state, action) => {},
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getAllProducts.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(getAllProducts.fulfilled, (state, action) => {
-        state.productsArr = action.payload;
+        state.rawProductsArr = action.payload;
         state.isLoading = false;
+        state.productsArr = state.rawProductsArr;
+        
         state.error = null;
       })
       .addCase(getAllProducts.rejected, (state, action) => {
@@ -314,7 +448,8 @@ const productsSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getProductByGender.fulfilled, (state, action) => {
-        state.productsArr = action.payload;
+        state.rawProductsArr = action.payload;
+        
         state.isLoading = false;
         state.error = null;
       })
@@ -338,13 +473,35 @@ const productsSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getProductsByCategoryId.fulfilled, (state, action) => {
-        state.productsArr = action.payload;
+        state.rawProductsArr = action.payload;
+        setProductsArr();
+
         state.isLoading = false;
         state.error = null;
       })
       .addCase(getProductsByCategoryId.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
+      })
+      .addCase(addToFavorites.fulfilled, (state, action) => {
+        state.favorites = action.payload;
+      })
+      .addCase(deleteFromFavorites.fulfilled, (state, action) => {
+        state.favorites = action.payload;
+      })
+      .addCase(getFavorites.fulfilled, (state, action) => {
+        state.favorites = action.payload;
+      })
+      .addCase(setFavProducts.fulfilled, (state, action) => {
+        state.favoritesProductsArr = action.payload;
+      })
+      .addCase(filterByAsc.fulfilled, (state, action) => {
+        state.productsArr = action.payload;
+        console.log(state.productsArr);
+      })
+      .addCase(filterByDesc.fulfilled, (state, action) => {
+        state.productsArr = action.payload;
+        console.log(state.productsArr);
       });
   },
 });
@@ -356,7 +513,6 @@ const userSlice = createSlice({
     message: "",
     accessToken: null,
     error: "",
-    favorites: [],
     userId: "",
     isAuthenticated: false,
   },
@@ -379,14 +535,12 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loginUser.pending, (state) => {})
       .addCase(loginUser.fulfilled, (state, action) => {
-        localStorage.setItem("isAuthenticated", true);
+        state.message = "Login successful";
         const { userId, token } = action.payload;
         state.accessToken = token;
         state.userId = userId;
-        console.log(state.userId);
-        state.message = "Login successful";
+        localStorage.setItem("isAuthenticated", true);
         localStorage.setItem("accessToken", token);
         localStorage.setItem("userId", userId);
       })
@@ -395,32 +549,20 @@ const userSlice = createSlice({
         state.accessToken = null;
         state.error = action.payload.error;
       })
-      .addCase(registerUser.pending, (state) => {})
       .addCase(registerUser.fulfilled, (state, action) => {
-        localStorage.setItem("isAuthenticated", true);
+        state.message = "Registration successful";
         const { userId, token } = action.payload;
         state.accessToken = token;
         state.userId = userId;
-        console.log(state.userId);
-        state.message = "Registration successful";
+        localStorage.setItem("isAuthenticated", true);
         localStorage.setItem("accessToken", token);
         localStorage.setItem("userId", userId);
       })
       .addCase(registerUser.rejected, (state, action) => {
-        state.isAuthenticated = false;
+        localStorage.setItem("isAuthenticated", false);
         state.accessToken = null;
         state.error = action.payload;
-      })
-      // .addCase(addToFavorites.pending, (state) => { })
-      // .addCase(addToFavorites.fulfilled, (state, action) => {
-      // })
-      // .addCase(addToFavorites.rejected, (state, action) => {
-      // })
-      .addCase(showFavorites.pending, (state) => {})
-      .addCase(showFavorites.fulfilled, (state, action) => {
-        state.favorites = action.payload;
-      })
-      .addCase(showFavorites.rejected, (state, action) => {});
+      });
   },
 });
 
@@ -430,7 +572,7 @@ const bagSlice = createSlice({
     items: [],
     isLoading: false,
     error: null,
-    message: '',
+    message: "",
     shoppingCartUrl: "https://localhost:44313/ShoppingCart",
     shoppingCartItemUrl: "https://localhost:44313/ShoppingCartItem",
   },
@@ -441,24 +583,21 @@ const bagSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getAllItems.fulfilled, (state, action) => {
-        console.log('fulfilled');
-        state.items = action.payload
+        console.log("fulfilled");
+        state.items = action.payload;
       })
       .addCase(getAllItems.rejected, (state, action) => {
- 
-        console.log('rejected');
+        console.log("rejected");
       })
       .addCase(addToBag.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(addToBag.fulfilled, (state, action) => {
-        console.log('fulfilled');
-        state.userBag = action.payload
+        console.log("fulfilled");
       })
       .addCase(addToBag.rejected, (state, action) => {
- 
-        console.log('rejected');
-      })
+        console.log("rejected");
+      });
   },
 });
 
@@ -501,5 +640,5 @@ export { productsSlice, userSlice, parentCategoriesSlice, bagSlice };
 
 export const { clearCategories } = parentCategoriesSlice.actions;
 export const { logoutUser } = userSlice.actions;
-
-export default parentCategoriesSlice.reducer;
+export const { setSelectedSubVariation, newSetSelectedVariation, resetFilter } =
+  productsSlice.actions;

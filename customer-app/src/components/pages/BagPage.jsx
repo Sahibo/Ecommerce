@@ -8,7 +8,7 @@ import { getAllItems } from "../../store/reducer";
 export default function BagPage() {
     let dispatch = useDispatch()
     const items = useSelector((state) => state.bag.items);
-    console.log(items)
+    
  
     useEffect(() => {
         dispatch(getAllItems())

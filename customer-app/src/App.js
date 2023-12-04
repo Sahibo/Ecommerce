@@ -11,6 +11,7 @@ import FavoritesPage from "./components/pages/FavoritesPage";
 import Header from "./components/organisms/Header";
 import Footer from "./components/organisms/Footer";
 import { useSelector } from "react-redux";
+import ProductCard from "./components/molecules/ProductCard";
 
 function App() {
 

@@ -1,24 +1,49 @@
 import "../../global.css";
 import "./styles/molecules.css";
-import FavIcon from "../../icons/like_icon.svg";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { showFavorites, addToFavorites, deleteFromFavorites } from '../../store/reducer';
+import { addToFavorites, deleteFromFavorites, setFavProducts , getProductById} from '../../store/reducer';
  
 export default function ProductCard({ product, productVariation }) {
-  let favorites = useSelector((state) => state.user.favorites);
-  
   let dispatch = useDispatch();
   let navigate = useNavigate();
+  const favoriteProducts = useSelector((state) => state.products.favoritesProductsArr) || [];
+  let selectedProduct = useSelector((state) => state.products.selectedProduct);
+
+  useEffect(() => {
+    dispatch(setFavProducts());
+  }, [dispatch, ]);
  
-  const [isFavorite, setIsFavorite] = useState(
-    favorites.find((fav) => fav.productVariationId === productVariation.id) !== undefined
-  );
+
+  const [isFavorite, setIsFavorite] = useState(false);
+ 
+  useEffect(() => {
+    const checkIsFavorite = () => {
+      const isFav = favoriteProducts.some(favProduct =>
+        favProduct.productVariations.some(mapProductVariation =>
+          mapProductVariation.id === productVariation.id && mapProductVariation.isFavorite
+        )
+      );
+      setIsFavorite(isFav);
+    };
+ 
+    checkIsFavorite();
+  }, [favoriteProducts, productVariation]);
+ 
+  // const isFavorite = favoriteProducts.some(favProduct =>
+  //   favProduct.productVariations.some(mapProductVariation =>
+  //     mapProductVariation.id === productVariation.id && mapProductVariation.isFavorite
+  //   )
+  // );
+ 
  
   const handleProductClick = async (productId, productVariationId, e) => {
     e.preventDefault();
+    await dispatch(getProductById(productId));
+
     navigate(`/Product/${productId}/ProductVariation/${productVariationId}`);
   };
  
@@ -26,20 +51,12 @@ export default function ProductCard({ product, productVariation }) {
     e.preventDefault();
  
     if (!isFavorite) {
-      dispatch(addToFavorites(id));
+      dispatch(addToFavorites(id))
     } else {
-      dispatch(deleteFromFavorites(id));
+      dispatch(deleteFromFavorites(id))
     }
- 
-    // Обновляем локальное состояние немедленно
     setIsFavorite(!isFavorite);
   };
- 
-  useEffect(() => {
-    if (!isFavorite) {
-      dispatch(showFavorites());
-    }
-  }, [dispatch, isFavorite]);
  
   return (
     <div className="productCard-container">
@@ -56,7 +73,7 @@ export default function ProductCard({ product, productVariation }) {
       <div className="card-bottom-container">
         <div className="card-info-container">
           <h5>{product.name}</h5>
-          <p>$ {productVariation.price}</p>
+          <p>$ {productVariation.subProductVariations[0].price}</p>
         </div>
  
         <div className="card-favIcon-container">
