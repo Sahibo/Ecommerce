@@ -3,20 +3,12 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace ASP_Project.Areas.Identity.Data.Models
 {
-    public enum Gender
-    {
-        Man = 0,
-        Woman = 1,
-        Unisex = 2
-    }
 
     public class Product
     {
         public int Id { get; set; }
-        
         public string Name { get; set; }
         public string Make { get; set; }
-        //public Gender Gender { get; set; }
         public string Fabric { get; set; }
         public string Description { get; set; }
         public bool IsDeleted { get; set; }

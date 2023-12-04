@@ -1,0 +1,66 @@
+﻿@using ASP_Project.Areas.Identity.Data.Models;
+@model IEnumerable<SubProductVariation>
+
+@{
+    ViewData["Title"] = "SubProductVariations";
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Sub Product Variatioans List</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="SubProductVariation" asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> &nbsp; Create New SubProductVariations
+            </a>
+        </div>
+    </div>
+    <br /><br />
+
+    <table class="table table-bordered table-striped" style="width: 100%">
+        <thead>
+        <tr>
+            <th style="text-align: center;">Name</th>
+            <th style="text-align: center;">Total Price</th>
+
+            <th style="text-align: center;">Price</th>
+            <th style="text-align: center;">Size</th>
+            <th style="text-align: center;">Quantity</th>
+            <th style="text-align: center;">Discount</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model!)
+        {
+            @if (!item.IsDeleted)
+            {
+                <tr>
+                    <td width="10%">
+                        @item.ProductVariation.Name
+                    </td>
+                    <td width="20%">
+                                            @item.TotalPrice
+                                        </td>
+                    <td width="20%">
+                        @item.Price
+                    </td>
+                    <td width="10%">
+                        @item.Size
+                    </td>
+                    
+                    <td width="10%">
+                        @item.Quantity
+                    </td>
+                    <td width="10%">
+                        @item.Discount
+                    </td>
+                </tr>
+            }
+
+        }
+        </tbody>
+    </table>
+    
+    
+</div>

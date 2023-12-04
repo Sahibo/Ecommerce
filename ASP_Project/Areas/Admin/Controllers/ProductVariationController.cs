@@ -59,7 +59,7 @@ namespace ASP_Project.Areas.Admin.Controllers
             ModelState.Clear();
             productVariation.ProductId = productId;
 
-            productVariation.Name = $"{productVariation.Color} {productVariation.Size}";
+            productVariation.Name = $"{productVariation.Id} {productVariation.Color}";
             var result = await _productVariationValidator.ValidateAsync(productVariation);
 
             if (result.IsValid)
@@ -134,9 +134,9 @@ namespace ASP_Project.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            existingProductVariation.Price = productVariation.Price;
-            existingProductVariation.Quantity = productVariation.Quantity;
-            existingProductVariation.Discount = productVariation.Discount;
+            // existingProductVariation.Price = productVariation.Price;
+            // existingProductVariation.Quantity = productVariation.Quantity;
+            // existingProductVariation.Discount = productVariation.Discount;
 
             _dbContext.ProductVariations.Update(existingProductVariation);
 

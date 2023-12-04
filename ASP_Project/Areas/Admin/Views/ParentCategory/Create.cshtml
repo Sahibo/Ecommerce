@@ -17,16 +17,15 @@
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
         <div class="mb-3">
-        		
-        			<select asp-for="Gender" class="form-select">
-        				<option value="" selected>Select a gender</option>
-        				@foreach (var gender in Enum.GetValues(typeof(Gender)))
-        				{
-        					<option value="@gender">@gender</option>
-        				}
-        				</select>
-        			<span asp-validation-for="Gender" class="text-danger"></span>
-        		</div>
+            <select asp-for="Gender" class="form-select">
+                <option value="" selected>Select a gender</option>
+                @foreach (var gender in Enum.GetValues(typeof(Gender)))
+                {
+                    <option value="@gender">@gender</option>
+                }
+            </select>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
         <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
         <a asp-controller="ParentCategory" asp-action="Index" class="btn btn-secondary" style="width:150px">
             Back to List

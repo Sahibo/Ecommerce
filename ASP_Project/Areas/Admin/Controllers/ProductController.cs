@@ -26,14 +26,14 @@ public class ProductController : Controller
     public async Task<IActionResult> Index()
     {
         var products = await _dbContext.Products.ToListAsync();
-        //var productImages = _dbContext.ProductImages.ToList();
+       
 
         foreach (var product in products)
         {
             product.Category = (await _dbContext.Categories.FirstOrDefaultAsync(c => c.Id == product.CategoryId))!;
         }
 
-        //ViewBag.ProductImages = productImages;
+       
 
         if (products != null)
         {

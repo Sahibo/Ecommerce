@@ -6,8 +6,8 @@
         public short Quantity { get; set; }
         public decimal TotalPrice { get; set; }
     
-        public int ProductVariationId { get; set; }
-        public ProductVariation ProductVariation { get; set; }
+        public int SubProductVariationId { get; set; }
+        public SubProductVariation SubProductVariation { get; set; }
     
         public string ShoppingCartId { get; set; }
         public ShoppingCart ShoppingCart { get; set; }

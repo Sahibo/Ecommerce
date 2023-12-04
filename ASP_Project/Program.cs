@@ -27,7 +27,7 @@ builder.Services.AddScoped<IValidator<ParentCategory>, ParentCategoryValidator>(
 builder.Services.AddScoped<IValidator<Product>, ProductValidator>();
 builder.Services.AddScoped<IValidator<Order>, OrderValidator>();
 builder.Services.AddScoped<IValidator<ProductVariation>, ProductVariationValidator>();
-builder.Services.AddScoped<IValidator<ProductVariation>, ProductVariationEditValidator>();
+//builder.Services.AddScoped<IValidator<ProductVariation>, ProductVariationEditValidator>();
 
 var app = builder.Build();
 
